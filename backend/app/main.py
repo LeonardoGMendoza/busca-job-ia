@@ -18,7 +18,7 @@ from .vagas import IDS_AREA, IDS_CIDADE, IDS_PERIODO, IDS_TIPO_MORADIA, BuscaRea
 DADOS = os.getenv("BJ_DATA_DIR", "./data")
 TOKEN = os.getenv("BJ_TOKEN", "")
 app = FastAPI(title="BuscaJob IA API", version="0.1.0")
-origens = [o.strip() for o in os.getenv("BJ_ORIGENS", "http://localhost:5500,https://leonardogmendoza.github.io").split(",") if o.strip()]
+origens = [o.strip() for o in os.getenv("BJ_ORIGENS", "http://localhost:5500,https://leonardogmendoza.github.io,https://buscajob.sandlj.com.br").split(",") if o.strip()]
 app.add_middleware(CORSMiddleware, allow_origins=origens, allow_methods=["GET", "POST", "PUT", "DELETE"], allow_headers=["*"])
 
 vagas = Vagas(DADOS)

@@ -24,8 +24,11 @@ Porta sugerida: **8070** (confira antes se está livre: `ss -ltnp | grep 8070`).
    curl -s https://buscajob.sandlj.com.br/api/saude
    ```
 
-4. Pronto: o site do GitHub Pages já aponta para `https://buscajob.sandlj.com.br`. Quando a API responde, a atendente passa a usar a IA da Oracle e aparecem as vagas remotas do dia.
+4. Pronto: o site abre em **https://buscajob.sandlj.com.br** (o Nginx entrega a pasta `web/` e manda só o `/api/` para o Docker).
+   O endereço do GitHub Pages (`leonardogmendoza.github.io/busca-job-ia/web/`) continua funcionando como reserva. Quando a API responde, a atendente passa a usar a IA da Oracle e aparecem as vagas remotas do dia.
 
-**Atualizar depois:** `cd /opt/busca-job-ia && git pull && cd backend && docker build -t busca-job-ia . && docker rm -f busca-job-ia && docker run ...` (o mesmo `docker run` do passo 2).
+**Atualizar só as telas** (depois de `npm run build` e `git push` no PC): `cd /opt/busca-job-ia && git pull` — o Nginx já serve a pasta `web/` nova, sem reiniciar nada.
+
+**Atualizar a API:** `cd /opt/busca-job-ia && git pull && cd backend && docker build -t busca-job-ia . && docker rm -f busca-job-ia && docker run ...` (o mesmo `docker run` do passo 2).
 
 Para testar a IA sem a VPS, no PC: rode o backend (`uvicorn app.main:app --port 8000`) e abra o site com `?api=http://localhost:8000`.
