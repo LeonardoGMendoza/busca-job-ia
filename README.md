@@ -29,6 +29,16 @@ Com o servidor ligado e uma chave configurada, o app mostra as vagas de verdade 
 Cada busca fica 6 horas em cache, para gastar pouca cota. Rota: `GET /api/buscar?cidade=&area=&livre=&periodo=`.
 Não usamos robôs no Indeed/LinkedIn/Computrabajo (os termos deles proíbem): só APIs que liberam os dados.
 
+## Moradia para estudantes (aba "Moradia")
+
+- **Locais reais** (pensionatos, residências estudantis, imobiliárias) com endereço, telefone, nota e mapa, vindos do Google Maps pela API **Local Business Data** da OpenWeb Ninja — usa a mesma chave (`JSEARCH_KEY`), mas é preciso ativar o plano grátis dessa API no painel. Rota: `GET /api/moradia?cidade=&tipo=` (cache 24 h).
+- **Portais de aluguel** de cada país (OLX, ZAP, Viva Real, InfoCasas, Clasipar, Facebook Marketplace, ZonaProp, Argenprop, Mercado Libre, Urbania, Adondevivir, Airbnb), com a busca pronta.
+- Aviso contra golpes (nunca pagar sinal antes de visitar e assinar contrato).
+
+## Premium (lista de espera)
+
+Botão **Premium** no topo e cartão na aba Vagas: ainda não cobra nada, só registra quem tem interesse (`POST /api/interesse`) e o contato opcional. Veja os números em `GET /api/cliques` (com `x-token`).
+
 ## O que vem dos outros projetos
 
 - **Atendente 3D que fala** (TalkingHead, igual StudentMedical/HablaPY/CambioFronteira), conversa por voz em PT/ES/EN.

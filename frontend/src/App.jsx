@@ -3,6 +3,8 @@ import { T, LOCALE } from './i18n.js';
 import { cargoDigitado, entender, portais, termo } from './busca.js';
 import { Busca, Pin, Maleta, Relogio, Externo, Info, Predio, Globo } from './icones.jsx';
 import Assistente from './Assistente.jsx';
+import Moradia from './Moradia.jsx';
+import Premium from './Premium.jsx';
 
 const VERSAO = 3;
 const API_PADRAO = 'https://buscajob.sandlj.com.br';   // servidor na VPS com a IA da Oracle
@@ -35,12 +37,18 @@ export default function App() {
   const [cargoTexto, setCargoTexto] = useState('');
   const [remotas, setRemotas] = useState(null);
   const [reaisLigadas, setReaisLigadas] = useState(false);
+  const [moradiaLigada, setMoradiaLigada] = useState(false);
+  const [pagina, setPagina] = useState(() => (location.hash === '#moradia' ? 'moradia' : 'vagas'));
+  const [morCidade, setMorCidade] = useState(() => ler('bj.morCidade', ''));
+  const [morTipo, setMorTipo] = useState(() => ler('bj.morTipo', 'pensionato'));
   const [reais, setReais] = useState({ estado: 'parado', vagas: [], fontes: [] });
   const t = T[idioma];
   const txt = (o) => (o && (o[idioma] || o.pt)) || '';
 
   useEffect(() => { document.documentElement.lang = idioma; gravar('bj.idioma', idioma); }, [idioma]);
   useEffect(() => { gravar('bj.busca2', busca); }, [busca]);
+  useEffect(() => { gravar('bj.morCidade', morCidade); gravar('bj.morTipo', morTipo); }, [morCidade, morTipo]);
+  useEffect(() => { history.replaceState(null, '', pagina === 'moradia' ? '#moradia' : location.pathname + location.search); window.scrollTo(0, 0); }, [pagina]);
 
   useEffect(() => {
     (async () => {
@@ -51,7 +59,7 @@ export default function App() {
           const r = await fetch(API + '/api/vagas', { cache: 'no-store' });
           if (r.ok) {
             setVagas(await r.json()); setOnline(true);
-            fetch(API + '/api/saude').then(x => x.json()).then(j => setReaisLigadas(!!j.vagas_reais)).catch(() => {});
+            fetch(API + '/api/saude').then(x => x.json()).then(j => { setReaisLigadas(!!j.vagas_reais); setMoradiaLigada(!!j.moradia); }).catch(() => {});
             return;
           }
         } catch (e) { /* sem servidor: exemplo local */ }
@@ -106,6 +114,18 @@ export default function App() {
 
   // voz: a área nova SEMPRE substitui a anterior (não fica presa em "TI")
   async function perguntar(texto) {
+    const s0 = ' ' + texto.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9 ]/g, ' ') + ' ';
+    const falaMoradia = cat.moradia.palavras.some(p => s0.includes(' ' + p + ' ')) && !/\b(vaga|vagas|emprego|trabalh|trabaj|empleo|job)/.test(s0);
+    if (falaMoradia) {
+      const r0 = entender(texto, cat);
+      const tipo = cat.moradia.tipos.find(x => x.palavras.some(p => s0.includes(' ' + p + ' ')));
+      const cid = r0.cidade && r0.cidade !== 'remoto' ? r0.cidade : morCidade;
+      if (cid) setMorCidade(cid);
+      if (tipo) setMorTipo(tipo.id);
+      setPagina('moradia');
+      const c = cat.cidades.find(x => x.id === cid);
+      return c ? t.morAchei(txt((tipo || cat.moradia.tipos.find(x => x.id === morTipo)).nome).toLowerCase(), c.nome) : t.morFaltaCidade;
+    }
     let r = entender(texto, cat), resposta = null;
     if (online) {
       try {
@@ -118,6 +138,7 @@ export default function App() {
     if (r.periodo) nova.periodo = r.periodo;
     if (r.area) { nova.area = r.area; nova.livre = ''; } else if (r.livre) { nova.area = ''; nova.livre = r.livre; }
     setBusca(nova);
+    setPagina('vagas');
     document.getElementById('resultados')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     if (resposta) return resposta;
     const a = cat.areas.find(x => x.id === nova.area), c = cat.cidades.find(x => x.id === nova.cidade);
@@ -140,8 +161,10 @@ export default function App() {
         <div className="container topo-linha">
           <a className="marca" href="./"><span className="marca-logo"><Maleta /></span>BuscaJob<span className="marca-ia">IA</span></a>
           <nav className="nav">
-            <a href="#resultados">{t.nav.vagas}</a>
-            <a href={zap ? `https://wa.me/${zap}` : '#anuncie'}>{t.nav.empresas}</a>
+            <button type="button" className={`aba ${pagina === 'vagas' ? 'ativa' : ''}`} onClick={() => setPagina('vagas')}>{t.nav.vagas}</button>
+            <button type="button" className={`aba ${pagina === 'moradia' ? 'ativa' : ''}`} onClick={() => setPagina('moradia')}>{t.nav.moradia}</button>
+            <a className="nav-empresas" href={zap ? `https://wa.me/${zap}` : '#anuncie'}>{t.nav.empresas}</a>
+            <button type="button" className="btn btn-premium btn-premium-topo" onClick={() => { setPagina('vagas'); setTimeout(() => document.getElementById('premium')?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 50); }}>Premium</button>
             <select className="idioma" value={idioma} onChange={e => setIdioma(e.target.value)} aria-label="Idioma">
               <option value="pt">Português</option><option value="es">Español</option><option value="en">English</option>
             </select>
@@ -149,7 +172,7 @@ export default function App() {
         </div>
       </header>
 
-      <section className="hero">
+      <section className="hero" hidden={pagina !== 'vagas'}>
         <div className="container">
           <h1>{t.heroTitulo}</h1>
           <p className="hero-sub">{t.heroSub}</p>
@@ -191,8 +214,10 @@ export default function App() {
         </div>
       </section>
 
+      {pagina === 'moradia' && <Moradia parte="hero" cat={cat} t={t} txt={txt} API={API} ligada={moradiaLigada} cidadeId={morCidade} setCidadeId={setMorCidade} tipoId={morTipo} setTipoId={setMorTipo} registrar={registrar} />}
+
       <main className="container layout">
-        <div className="coluna-principal" id="resultados">
+        <div className="coluna-principal" id="resultados" hidden={pagina !== 'vagas'}>
           {reais.estado !== 'parado' && links.length > 0 && (
             <section className="card">
               <div className="card-cabeca">
@@ -287,9 +312,12 @@ export default function App() {
             </a>
           )}
         </div>
+        {pagina === 'moradia' && <div className="coluna-principal"><Moradia parte="conteudo" cat={cat} t={t} txt={txt} API={API} ligada={moradiaLigada} cidadeId={morCidade} setCidadeId={setMorCidade} tipoId={morTipo} setTipoId={setMorTipo} registrar={registrar} /></div>}
 
         <aside className="coluna-lateral">
+          {/* a assistente fica sempre montada: não recarrega o 3D ao trocar de aba */}
           <Assistente idioma={idioma} t={t} onPergunta={perguntar} />
+          {pagina === 'vagas' && <Premium t={t} API={API} online={online} idioma={idioma} />}
 
           <section className="card patrocinado" id="anuncie">
             <span className="rotulo-pequeno">{t.patrocinado}</span>

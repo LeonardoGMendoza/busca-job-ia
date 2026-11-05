@@ -13,7 +13,7 @@ from .config import carregar_env
 carregar_env()
 
 from .ia import oracle_do_ambiente  # noqa: E402
-from .vagas import IDS_AREA, IDS_CIDADE, IDS_PERIODO, BuscaReal, Remotas, Vagas, responder  # noqa: E402
+from .vagas import IDS_AREA, IDS_CIDADE, IDS_PERIODO, IDS_TIPO_MORADIA, BuscaReal, Moradia, Remotas, Vagas, responder  # noqa: E402
 
 DADOS = os.getenv("BJ_DATA_DIR", "./data")
 TOKEN = os.getenv("BJ_TOKEN", "")
@@ -24,6 +24,7 @@ app.add_middleware(CORSMiddleware, allow_origins=origens, allow_methods=["GET", 
 vagas = Vagas(DADOS)
 remotas = Remotas()
 busca_real = BuscaReal()
+moradia = Moradia()
 chat = oracle_do_ambiente()
 ID_OK = re.compile(r"^[a-zA-Z0-9_-]{1,40}$")
 _pedidos = defaultdict(deque)
@@ -72,7 +73,7 @@ class Vaga(BaseModel):
 
 @app.get("/api/saude")
 def saude():
-    return {"ok": True, "ia": chat is not None, "vagas_reais": busca_real.ligada}
+    return {"ok": True, "ia": chat is not None, "vagas_reais": busca_real.ligada, "moradia": moradia.ligada}
 
 
 @app.post("/api/perguntar")
@@ -112,6 +113,31 @@ def buscar_vagas(request: Request, cidade: str, area: str = "", livre: str = "",
     if cidade not in IDS_CIDADE or (area and area not in IDS_AREA) or (periodo and periodo not in IDS_PERIODO):
         raise HTTPException(422, "Cidade, área ou jornada inválida.")
     return busca_real.buscar(cidade, area, livre[:60], periodo)
+
+
+@app.get("/api/moradia")
+def buscar_moradia(request: Request, cidade: str, tipo: str = "pensionato"):
+    """Pensionatos, residências estudantis e imobiliárias reais da cidade (Google Maps)."""
+    limitar(request, maximo=20)
+    if cidade not in IDS_CIDADE or tipo not in IDS_TIPO_MORADIA:
+        raise HTTPException(422, "Cidade ou tipo inválido.")
+    return moradia.buscar(cidade, tipo)
+
+
+class Interesse(BaseModel):
+    plano: str = Field("premium", pattern=r"^(premium|empresa)$")
+    contato: str = Field("", max_length=120)
+    idioma: str = Field("pt", max_length=5)
+
+
+@app.post("/api/interesse")
+def registrar_interesse(i: Interesse, request: Request):
+    """Lista de espera do Premium: conta quantas pessoas querem (o contato é opcional)."""
+    limitar(request, maximo=10)
+    total = vagas.registrar_clique("interesse", i.plano)
+    if i.contato.strip():
+        vagas.registrar_clique("interesse-contato", i.contato.strip()[:120])
+    return {"ok": True, "total": total}
 
 
 @app.get("/api/remotas")

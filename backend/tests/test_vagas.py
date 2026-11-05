@@ -163,3 +163,25 @@ class TestLocalLimpo(unittest.TestCase):
                                            "job_location": "Cd. del Este     •  a través de LinkedIn Paraguay"}]}
         r = BuscaReal(env={"JSEARCH_KEY": "k"}, http=http).buscar("cde", "atendimento")
         self.assertEqual(r["vagas"][0]["local"], "Ciudad del Este")
+
+
+class TestMoradia(unittest.TestCase):
+    def test_locais_reais(self):
+        from app.vagas import Moradia
+        urls = []
+
+        def http(url, **k):
+            urls.append((url, k.get("cabecalhos")))
+            return {"status": "OK", "data": [
+                {"name": "Residencia Estudiantil Ejemplo", "full_address": "Calle 1, Ciudad del Este", "phone_number": "+595 981 000000",
+                 "rating": 4.6, "review_count": 31, "place_link": "https://maps.google.com/?cid=1", "business_status": "OPEN"},
+                {"name": "Fechada", "business_status": "CLOSED_PERMANENTLY"}]}
+        m = Moradia(env={"JSEARCH_KEY": "k"}, http=http)
+        r = m.buscar("cde", "pensionato")
+        self.assertEqual([x["nome"] for x in r["locais"]], ["Residencia Estudiantil Ejemplo"])
+        self.assertIn("local-business-data/search", urls[0][0])
+        self.assertIn("region=py", urls[0][0])
+        self.assertEqual(urls[0][1], {"x-api-key": "k"})
+        m.buscar("cde", "pensionato")
+        self.assertEqual(len(urls), 1)
+        self.assertEqual(m.buscar("remoto", "pensionato")["locais"], [])

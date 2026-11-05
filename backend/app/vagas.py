@@ -353,3 +353,61 @@ class BuscaReal:
         with self._lock:
             self._cache[chave] = (time.time(), resultado)
         return resultado
+
+
+# ---------------------------------------------------------------------------------------------
+# Moradia: pensionatos, residências estudantis e imobiliárias REAIS (Google Maps via OpenWeb Ninja Local Business Data).
+# Usa a mesma chave do JSearch (JSEARCH_KEY). Cache de 24 h.
+# ---------------------------------------------------------------------------------------------
+IDS_TIPO_MORADIA = {t["id"] for t in CATALOGO.get("moradia", {}).get("tipos", [])}
+
+
+class Moradia:
+    def __init__(self, env=os.environ, http=_http_json, validade=24 * 3600):
+        self.http, self.validade = http, validade
+        self.chave = env.get("LOCAIS_KEY") or env.get("JSEARCH_KEY", "")
+        self._cache, self._lock = {}, threading.Lock()
+
+    @property
+    def ligada(self):
+        return bool(self.chave)
+
+    def buscar(self, cidade_id, tipo_id="pensionato"):
+        cidade = next((c for c in CATALOGO["cidades"] if c["id"] == cidade_id), None)
+        tipo = next((t for t in CATALOGO["moradia"]["tipos"] if t["id"] == tipo_id), None)
+        if not cidade or cidade["pais"] == "REMOTO" or not tipo or not self.chave:
+            return {"locais": [], "ligada": self.ligada}
+        lingua = "pt" if cidade["pais"] == "BR" else "es"
+        consulta = f'{tipo["local"][lingua]} {cidade["local"]}'
+        chave = f"{consulta}|{cidade_id}"
+        with self._lock:
+            em_cache = self._cache.get(chave)
+            if em_cache and time.time() - em_cache[0] < self.validade:
+                return em_cache[1]
+        params = {"query": consulta, "limit": "20", "language": lingua, "region": PAIS_CODIGO[cidade["pais"]]}
+        try:
+            bruto = self.http("https://api.openwebninja.com/local-business-data/search?" + urllib.parse.urlencode(params),
+                              cabecalhos={"x-api-key": self.chave})
+        except urllib.error.HTTPError as erro:
+            corpo = ""
+            try:
+                corpo = erro.read().decode("utf-8", "replace")[:200]
+            except Exception:  # noqa: BLE001
+                pass
+            log.warning("Locais falhou: HTTP %s %s", erro.code, corpo)
+            return {"locais": [], "ligada": True, "erros": [f"Locais: HTTP {erro.code} {corpo}".strip()]}
+        except Exception as erro:  # noqa: BLE001
+            log.warning("Locais falhou: %s", type(erro).__name__)
+            return {"locais": [], "ligada": True, "erros": [f"Locais: {type(erro).__name__}"]}
+        locais = []
+        for b in (bruto.get("data") or [])[:20]:
+            if b.get("business_status") and b["business_status"] != "OPEN":
+                continue
+            locais.append({"nome": b.get("name"), "endereco": b.get("full_address") or b.get("address") or "",
+                           "telefone": b.get("phone_number") or "", "site": b.get("website") or "",
+                           "nota": b.get("rating"), "avaliacoes": b.get("review_count") or 0,
+                           "mapa": b.get("place_link") or "", "tipo": b.get("type") or ""})
+        resultado = {"locais": [x for x in locais if x["nome"]], "ligada": True, "consulta": consulta}
+        with self._lock:
+            self._cache[chave] = (time.time(), resultado)
+        return resultado

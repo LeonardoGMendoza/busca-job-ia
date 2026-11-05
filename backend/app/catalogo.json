@@ -795,5 +795,211 @@
       },
       "link": ""
     }
-  ]
+  ],
+  "moradia": {
+    "tipos": [
+      {
+        "id": "quarto",
+        "nome": {
+          "pt": "Quarto para estudante",
+          "es": "Habitación para estudiantes",
+          "en": "Room for students"
+        },
+        "termo": {
+          "pt": "quarto para estudante aluguel",
+          "es": "habitación alquiler estudiantes"
+        },
+        "local": {
+          "pt": "pensionato estudantil",
+          "es": "residencia estudiantil"
+        },
+        "palavras": [
+          "quarto",
+          "quartos",
+          "habitacion",
+          "habitaciones",
+          "pieza",
+          "piezas",
+          "cuarto",
+          "room"
+        ]
+      },
+      {
+        "id": "pensionato",
+        "nome": {
+          "pt": "Pensionato / residência",
+          "es": "Pensión / residencia estudiantil",
+          "en": "Student residence"
+        },
+        "termo": {
+          "pt": "pensionato estudantil",
+          "es": "pensión residencia estudiantil"
+        },
+        "local": {
+          "pt": "pensionato",
+          "es": "pension residencia estudiantil"
+        },
+        "palavras": [
+          "pensionato",
+          "pensao",
+          "residencia",
+          "residencia estudantil",
+          "residencia estudiantil",
+          "pension",
+          "pensiones",
+          "dormitorio",
+          "hostel",
+          "albergue"
+        ]
+      },
+      {
+        "id": "republica",
+        "nome": {
+          "pt": "República / dividir",
+          "es": "Compartido / roommates",
+          "en": "Shared flat"
+        },
+        "termo": {
+          "pt": "república estudantil vaga",
+          "es": "departamento compartido estudiantes"
+        },
+        "local": {
+          "pt": "pensionato estudantil",
+          "es": "residencia estudiantil"
+        },
+        "palavras": [
+          "republica",
+          "dividir",
+          "compartilhar",
+          "compartido",
+          "compartir",
+          "roommate",
+          "roommates",
+          "colega de quarto"
+        ]
+      },
+      {
+        "id": "kitnet",
+        "nome": {
+          "pt": "Kitnet / apartamento",
+          "es": "Monoambiente / departamento",
+          "en": "Studio / apartment"
+        },
+        "termo": {
+          "pt": "kitnet aluguel",
+          "es": "monoambiente alquiler"
+        },
+        "local": {
+          "pt": "imobiliária",
+          "es": "inmobiliaria"
+        },
+        "palavras": [
+          "kitnet",
+          "kitinete",
+          "apartamento",
+          "apto",
+          "monoambiente",
+          "departamento",
+          "depto",
+          "studio",
+          "flat",
+          "casa"
+        ]
+      }
+    ],
+    "portais": {
+      "BR": [
+        {
+          "id": "olx",
+          "nome": "OLX",
+          "dominio": "olx.com.br"
+        },
+        {
+          "id": "zap",
+          "nome": "ZAP Imóveis",
+          "dominio": "zapimoveis.com.br"
+        },
+        {
+          "id": "vivareal",
+          "nome": "Viva Real",
+          "dominio": "vivareal.com.br"
+        }
+      ],
+      "PY": [
+        {
+          "id": "infocasas",
+          "nome": "InfoCasas",
+          "dominio": "infocasas.com.py"
+        },
+        {
+          "id": "clasipar",
+          "nome": "Clasipar",
+          "dominio": "clasipar.paraguay.com"
+        },
+        {
+          "id": "facebook",
+          "nome": "Facebook Marketplace",
+          "dominio": "facebook.com/marketplace"
+        }
+      ],
+      "AR": [
+        {
+          "id": "zonaprop",
+          "nome": "ZonaProp",
+          "dominio": "zonaprop.com.ar"
+        },
+        {
+          "id": "argenprop",
+          "nome": "Argenprop",
+          "dominio": "argenprop.com"
+        },
+        {
+          "id": "mercadolibre",
+          "nome": "Mercado Libre Inmuebles",
+          "dominio": "inmuebles.mercadolibre.com.ar"
+        }
+      ],
+      "PE": [
+        {
+          "id": "urbania",
+          "nome": "Urbania",
+          "dominio": "urbania.pe"
+        },
+        {
+          "id": "adondevivir",
+          "nome": "Adondevivir",
+          "dominio": "adondevivir.com"
+        },
+        {
+          "id": "mercadolibre",
+          "nome": "Mercado Libre Inmuebles",
+          "dominio": "inmuebles.mercadolibre.com.pe"
+        }
+      ]
+    },
+    "palavras": [
+      "alugar",
+      "aluguel",
+      "alugo",
+      "morar",
+      "moradia",
+      "casa para",
+      "quarto",
+      "pensionato",
+      "republica",
+      "kitnet",
+      "alquilar",
+      "alquiler",
+      "alquilo",
+      "vivir",
+      "vivienda",
+      "habitacion",
+      "pieza",
+      "pension",
+      "departamento",
+      "rent",
+      "room",
+      "housing"
+    ]
+  }
 }
