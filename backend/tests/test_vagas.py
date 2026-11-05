@@ -87,3 +87,40 @@ class TestRemotas(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestBuscaReal(unittest.TestCase):
+    def test_jsearch_e_jooble_juntos_sem_repetir_e_com_cache(self):
+        from app.vagas import BuscaReal
+        chamadas = []
+
+        def http(url, metodo="GET", corpo=None, cabecalhos=None):
+            chamadas.append((url, metodo, corpo, cabecalhos))
+            if "openwebninja" in url:
+                return {"data": [{"job_title": "Mozo", "employer_name": "Bar A", "job_location": "Ciudad del Este", "job_apply_link": "https://a",
+                                  "job_publisher": "LinkedIn", "job_posted_at_datetime_utc": "2026-11-03T10:00:00Z", "job_min_salary": 3000000, "job_salary_currency": "PYG"}]}
+            return {"jobs": [{"title": "<b>Mozo</b>", "company": "Bar A", "link": "https://dup"}, {"title": "Mozo de eventos", "company": "B", "link": "https://b", "location": "CDE"}]}
+        b = BuscaReal(env={"JSEARCH_KEY": "k", "JOOBLE_KEY_PY": "j"}, http=http)
+        r = b.buscar("cde", "garcom")
+        self.assertEqual([v["titulo"] for v in r["vagas"]], ["Mozo", "Mozo de eventos"])   # "Mozo / Bar A" repetido some
+        self.assertEqual(r["fontes"], ["JSearch", "Jooble"])
+        self.assertIn("country=py", chamadas[0][0])
+        self.assertEqual(chamadas[0][3], {"x-api-key": "k"})
+        self.assertTrue(chamadas[1][0].startswith("https://py.jooble.org/api/j"))
+        self.assertEqual(r["vagas"][0]["salario"], "3000000 PYG")
+        b.buscar("cde", "garcom")
+        self.assertEqual(len(chamadas), 2)   # segunda vez veio do cache
+
+    def test_sem_chaves_nao_chama_nada(self):
+        from app.vagas import BuscaReal
+        b = BuscaReal(env={}, http=lambda *a, **k: self.fail("não devia chamar"))
+        r = b.buscar("foz", "enfermagem")
+        self.assertEqual((r["vagas"], r["ligada"]), ([], False))
+
+    def test_remoto_e_livre(self):
+        from app.vagas import BuscaReal
+        urls = []
+        b = BuscaReal(env={"JSEARCH_KEY": "k"}, http=lambda url, **k: urls.append(url) or {"data": []})
+        b.buscar("remoto", livre="motorista de van")
+        self.assertIn("work_from_home=true", urls[0])
+        self.assertIn("motorista+de+van+remote", urls[0])

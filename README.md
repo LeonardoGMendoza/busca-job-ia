@@ -19,6 +19,16 @@
 Áreas: TI/Dev, enfermagem, cuidador(a), garçom, cozinha, limpeza/Airbnb, eventos, atendimento, vendas, entregas, aulas particulares, ensinar português, marketing digital. Horário: qualquer, meio período, fim de semana, à noite.
 O termo de busca vai no idioma do país (português no Brasil, espanhol no Paraguai/Argentina/Peru, inglês no remoto). Para adicionar cidade, área ou site, edite `backend/app/catalogo.json` e copie para `web/catalogo.json`.
 
+## Vagas reais dentro do app
+
+Com o servidor ligado e uma chave configurada, o app mostra as vagas de verdade (título, empresa, cidade, salário quando houver e "Candidatar-se"):
+
+- **JSearch** (Google Vagas, que junta LinkedIn, Indeed, Glassdoor e sites das empresas): crie a chave grátis em openwebninja.com (200 buscas/mês) e coloque em `JSEARCH_KEY`. Se usar pelo RapidAPI, ponha também `JSEARCH_PROVEDOR=rapidapi`.
+- **Jooble** (API oficial e gratuita): uma chave por país (`JOOBLE_KEY_BR`, `JOOBLE_KEY_AR`, `JOOBLE_KEY_PE`, `JOOBLE_KEY_PY`), pedida em `https://<país>.jooble.org/api/about`.
+
+Cada busca fica 6 horas em cache, para gastar pouca cota. Rota: `GET /api/buscar?cidade=&area=&livre=&periodo=`.
+Não usamos robôs no Indeed/LinkedIn/Computrabajo (os termos deles proíbem): só APIs que liberam os dados.
+
 ## O que vem dos outros projetos
 
 - **Atendente 3D que fala** (TalkingHead, igual StudentMedical/HablaPY/CambioFronteira), conversa por voz em PT/ES/EN.

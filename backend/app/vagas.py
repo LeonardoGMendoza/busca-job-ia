@@ -217,3 +217,118 @@ class Remotas:
             if len(saida) >= limite:
                 break
         return {"fonte": "Remote OK", "fonte_link": "https://remoteok.com", "vagas": saida}
+
+
+# ---------------------------------------------------------------------------------------------
+# Vagas reais dentro do app: JSearch (Google Vagas, via OpenWeb Ninja ou RapidAPI) e Jooble (API oficial).
+# Só usa serviços que liberam os dados por API (sem robô em Indeed/LinkedIn). Cache de 6 h para gastar pouca cota.
+# ---------------------------------------------------------------------------------------------
+import os  # noqa: E402
+import urllib.parse  # noqa: E402
+
+PAIS_CODIGO = {"BR": "br", "PY": "py", "AR": "ar", "PE": "pe"}
+
+
+def termo_busca(cidade_id, area_id="", livre="", periodo_id="", com_jornada=True):
+    cidade = next((c for c in CATALOGO["cidades"] if c["id"] == cidade_id), None)
+    area = next((a for a in CATALOGO["areas"] if a["id"] == area_id), None)
+    if not cidade or not (area or livre):
+        return None
+    lingua = CATALOGO["paises"][cidade["pais"]]["idioma"]
+    base = area["termo"][lingua] if area else livre.strip()[:60]
+    periodo = next((p for p in CATALOGO["periodos"] if p["id"] == periodo_id), None)
+    q = " ".join(x for x in [base, periodo["termo"][lingua] if (com_jornada and periodo) else ""] if x)
+    return {"q": q, "base": base, "cidade": cidade, "pais": cidade["pais"], "lingua": lingua}
+
+
+def _http_json(url, metodo="GET", corpo=None, cabecalhos=None, timeout=20):
+    dados = json.dumps(corpo).encode("utf-8") if corpo is not None else None
+    pedido = urllib.request.Request(url, data=dados, method=metodo, headers={"User-Agent": "BuscaJobIA/0.2", **(cabecalhos or {})})
+    if dados is not None:
+        pedido.add_header("Content-Type", "application/json")
+    with urllib.request.urlopen(pedido, timeout=timeout) as r:
+        return json.loads(r.read().decode("utf-8"))
+
+
+class BuscaReal:
+    def __init__(self, env=os.environ, http=_http_json, validade=6 * 3600):
+        self.http, self.validade = http, validade
+        self.jsearch_key = env.get("JSEARCH_KEY", "")
+        self.jsearch_rapidapi = env.get("JSEARCH_PROVEDOR", "openwebninja").lower() == "rapidapi"
+        self.jooble = {cc: env.get(f"JOOBLE_KEY_{cc.upper()}", "") for cc in PAIS_CODIGO.values()}
+        self._cache, self._lock = {}, threading.Lock()
+
+    @property
+    def ligada(self):
+        return bool(self.jsearch_key or any(self.jooble.values()))
+
+    # ---- provedores ----
+    def _jsearch(self, t):
+        remoto = t["pais"] == "REMOTO"
+        consulta = f'{t["q"]} remote' if remoto else f'{t["q"]} {t["cidade"]["local"]}'
+        params = {"query": consulta, "page": "1", "num_pages": "1", "date_posted": "month"}
+        if remoto:
+            params["work_from_home"] = "true"
+        else:
+            params["country"] = PAIS_CODIGO[t["pais"]]
+        if self.jsearch_rapidapi:
+            url = "https://jsearch.p.rapidapi.com/search?" + urllib.parse.urlencode(params)
+            cab = {"X-RapidAPI-Key": self.jsearch_key, "X-RapidAPI-Host": "jsearch.p.rapidapi.com"}
+        else:
+            url = "https://api.openwebninja.com/jsearch/search?" + urllib.parse.urlencode(params)
+            cab = {"x-api-key": self.jsearch_key}
+        bruto = self.http(url, cabecalhos=cab)
+        saida = []
+        for j in (bruto.get("data") or [])[:20]:
+            salario = ""
+            if j.get("job_min_salary") or j.get("job_max_salary"):
+                faixa = " - ".join(str(int(v)) for v in (j.get("job_min_salary"), j.get("job_max_salary")) if v)
+                salario = f'{faixa} {j.get("job_salary_currency") or ""} {j.get("job_salary_period") or ""}'.strip()
+            saida.append({"titulo": j.get("job_title"), "empresa": j.get("employer_name"), "local": j.get("job_location") or ("Remote" if remoto else t["cidade"]["nome"]),
+                          "link": j.get("job_apply_link"), "fonte": j.get("job_publisher") or "Google Vagas", "data": (j.get("job_posted_at_datetime_utc") or "")[:10],
+                          "salario": salario, "tipo": j.get("job_employment_type") or "", "remoto": bool(j.get("job_is_remote")),
+                          "resumo": (j.get("job_description") or "")[:220]})
+        return saida
+
+    def _jooble(self, t):
+        cc = PAIS_CODIGO.get(t["pais"])
+        chave = self.jooble.get(cc or "", "")
+        if not chave:
+            return []
+        bruto = self.http(f"https://{cc}.jooble.org/api/{chave}", metodo="POST",
+                          corpo={"keywords": t["q"], "location": t["cidade"]["nome"], "page": 1, "ResultOnPage": 20})
+        return [{"titulo": re.sub(r"<[^>]+>", "", j.get("title") or ""), "empresa": j.get("company"), "local": j.get("location") or t["cidade"]["nome"],
+                 "link": j.get("link"), "fonte": j.get("source") or "Jooble", "data": (j.get("updated") or "")[:10], "salario": j.get("salary") or "",
+                 "tipo": j.get("type") or "", "remoto": False, "resumo": re.sub(r"<[^>]+>", "", j.get("snippet") or "")[:220]}
+                for j in (bruto.get("jobs") or [])[:20]]
+
+    def buscar(self, cidade_id, area_id="", livre="", periodo_id=""):
+        t = termo_busca(cidade_id, area_id, livre, periodo_id)
+        if not t:
+            return {"vagas": [], "fontes": [], "ligada": self.ligada}
+        chave = f'{t["q"]}|{cidade_id}'
+        with self._lock:
+            em_cache = self._cache.get(chave)
+            if em_cache and time.time() - em_cache[0] < self.validade:
+                return em_cache[1]
+        vagas, fontes = [], []
+        for nome, funcao in (("JSearch", self._jsearch if self.jsearch_key else None), ("Jooble", self._jooble)):
+            if not funcao:
+                continue
+            try:
+                achadas = funcao(t)
+                if achadas:
+                    fontes.append(nome)
+                vagas.extend(achadas)
+            except Exception as erro:  # noqa: BLE001
+                log.warning("%s falhou: %s", nome, type(erro).__name__)
+        vistos, unicas = set(), []
+        for v in vagas:
+            k = (sem_acento(v["titulo"] or ""), sem_acento(v["empresa"] or ""))
+            if v["link"] and v["titulo"] and k not in vistos:
+                vistos.add(k)
+                unicas.append(v)
+        resultado = {"vagas": unicas[:30], "fontes": fontes, "ligada": self.ligada, "termo": t["q"]}
+        with self._lock:
+            self._cache[chave] = (time.time(), resultado)
+        return resultado

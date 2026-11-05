@@ -85,6 +85,14 @@ a { color: var(--azul-600); }
 .vaga strong { display: flex; align-items: center; gap: 8px; font-weight: 600; }
 .vaga-meta { display: block; font-size: 13px; color: var(--cinza-500); margin-top: 2px; }
 .selo { font-size: 11px; font-weight: 600; color: var(--ambar-800); background: var(--ambar-50); border: 1px solid var(--ambar-300); border-radius: 999px; padding: 1px 8px; }
+.vaga-real { align-items: flex-start; }
+.vaga-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
+.tag { font-size: 12px; font-weight: 500; color: var(--cinza-700); background: var(--cinza-100); border-radius: 6px; padding: 2px 8px; }
+.vaga-resumo { margin: 6px 0 0; font-size: 13.5px; color: var(--cinza-700); }
+.esqueleto div { width: 100%; }
+.esqueleto span { display: block; height: 12px; border-radius: 6px; background: linear-gradient(90deg, var(--cinza-100), var(--cinza-200), var(--cinza-100)); background-size: 200% 100%; animation: brilho 1.2s infinite; }
+.esqueleto span + span { width: 55%; margin-top: 8px; }
+@keyframes brilho { to { background-position: -200% 0; } }
 .fonte { font-size: 12px; color: var(--cinza-500); margin: 10px 0 0; }
 
 /* assistente */

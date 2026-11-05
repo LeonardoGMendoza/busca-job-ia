@@ -34,6 +34,8 @@ export default function App() {
   const [busca, setBusca] = useState(() => ler('bj.busca2', { cidade: '', area: '', livre: '', periodo: '' }));
   const [cargoTexto, setCargoTexto] = useState('');
   const [remotas, setRemotas] = useState(null);
+  const [reaisLigadas, setReaisLigadas] = useState(false);
+  const [reais, setReais] = useState({ estado: 'parado', vagas: [], fontes: [] });
   const t = T[idioma];
   const txt = (o) => (o && (o[idioma] || o.pt)) || '';
 
@@ -47,7 +49,11 @@ export default function App() {
       if (API) {
         try {
           const r = await fetch(API + '/api/vagas', { cache: 'no-store' });
-          if (r.ok) { setVagas(await r.json()); setOnline(true); return; }
+          if (r.ok) {
+            setVagas(await r.json()); setOnline(true);
+            fetch(API + '/api/saude').then(x => x.json()).then(j => setReaisLigadas(!!j.vagas_reais)).catch(() => {});
+            return;
+          }
         } catch (e) { /* sem servidor: exemplo local */ }
       }
       setVagas(await (await fetch(`./vagas-exemplo.json?v=${VERSAO}`, { cache: 'no-cache' })).json());
@@ -72,6 +78,20 @@ export default function App() {
     fetch(`${API}/api/remotas?q=${encodeURIComponent(q)}`).then(r => (r.ok ? r.json() : null)).then(j => { if (vivo && j) setRemotas(j); }).catch(() => {});
     return () => { vivo = false; };
   }, [online, cat, busca]);
+
+  // vagas reais (JSearch/Google Vagas + Jooble) buscadas pelo servidor
+  useEffect(() => {
+    if (!reaisLigadas || !busca.cidade || !(busca.area || busca.livre)) { setReais({ estado: 'parado', vagas: [], fontes: [] }); return; }
+    let vivo = true;
+    setReais(r => ({ ...r, estado: 'carregando' }));
+    const p = new URLSearchParams({ cidade: busca.cidade, area: busca.area || '', livre: busca.area ? '' : busca.livre, periodo: busca.periodo || '' });
+    const espera = setTimeout(() => {
+      fetch(`${API}/api/buscar?${p}`).then(r => (r.ok ? r.json() : Promise.reject(r.status)))
+        .then(j => { if (vivo) setReais({ estado: 'pronto', vagas: j.vagas || [], fontes: j.fontes || [] }); })
+        .catch(() => { if (vivo) setReais({ estado: 'erro', vagas: [], fontes: [] }); });
+    }, 350);
+    return () => { vivo = false; clearTimeout(espera); };
+  }, [reaisLigadas, busca]);
 
   const registrar = (tipo, id) => {
     if (!online) return;
@@ -173,11 +193,35 @@ export default function App() {
 
       <main className="container layout">
         <div className="coluna-principal" id="resultados">
+          {reais.estado !== 'parado' && links.length > 0 && (
+            <section className="card">
+              <div className="card-cabeca">
+                <h2>{t.encontradas(nomeCargo.toLowerCase(), cidade.nome)}</h2>
+                <p className="sub">{reais.estado === 'carregando' ? t.procurando : reais.vagas.length ? t.encontradasSub(reais.vagas.length, reais.fontes.join(' + ')) : t.nenhumaReal}</p>
+              </div>
+              {reais.estado === 'carregando' && <ul className="vagas">{[0, 1, 2].map(i => <li key={i} className="vaga esqueleto"><div><span /><span /></div></li>)}</ul>}
+              {reais.estado === 'pronto' && reais.vagas.length > 0 && (
+                <ul className="vagas">
+                  {reais.vagas.map(v => (
+                    <li key={v.link} className="vaga vaga-real">
+                      <div>
+                        <strong>{v.titulo}</strong>
+                        <span className="vaga-meta">{[v.empresa, v.local, v.fonte, v.data && new Date(v.data + 'T12:00').toLocaleDateString(LOCALE[idioma])].filter(Boolean).join(' · ')}</span>
+                        {(v.salario || v.tipo) && <span className="vaga-tags">{v.salario && <span className="tag">{v.salario}</span>}{v.tipo && <span className="tag">{v.tipo}</span>}</span>}
+                        {v.resumo && <p className="vaga-resumo">{v.resumo}…</p>}
+                      </div>
+                      <a className="btn btn-primario" href={v.link} target="_blank" rel="noopener noreferrer" onClick={() => registrar('vaga', 'real:' + v.fonte)}>{t.candidatar}</a>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </section>
+          )}
           {links.length ? (
             <section className="card">
               <div className="card-cabeca">
                 <div>
-                  <h2>{t.resultados(nomeCargo.toLowerCase(), cidade.nome)}{periodo?.id ? ` · ${txt(periodo.nome)}` : ''}</h2>
+                  <h2>{reais.estado !== 'parado' ? t.maisPortais : t.resultados(nomeCargo.toLowerCase(), cidade.nome)}{periodo?.id ? ` · ${txt(periodo.nome)}` : ''}</h2>
                   <p className="sub">{t.portaisSub}</p>
                 </div>
               </div>
