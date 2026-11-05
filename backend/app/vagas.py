@@ -35,7 +35,29 @@ def entender(texto, catalogo=CATALOGO):
         return melhor["id"] if melhor else ""
 
     return {"cidade": achar(catalogo["cidades"]), "area": achar(catalogo["areas"]),
-            "periodo": achar([p for p in catalogo["periodos"] if p["id"]])}
+            "periodo": achar([p for p in catalogo["periodos"] if p["id"]]), "livre": extrair_livre(texto, catalogo)}
+
+
+GATILHOS = r"(?:trabalh\w*|vagas?|empregos?|servicos?|trabaj\w*|empleos?|puestos?|jobs?|work\w*|procuro|busco|quero ser|quiero ser)"
+CORTES = r"\b(?:em|en|in|na|no|a noite|de noite|a la noche|meio periodo|medio tiempo|fim de semana|fines de semana|home office|remoto|remote|por favor)\b"
+
+
+def extrair_livre(texto, catalogo=CATALOGO):
+    """Profissão que não está na lista ("vaga de recepcionista de hotel em Foz" -> "recepcionista de hotel")."""
+    s = re.sub(r"\s+", " ", re.sub(r"[^a-z0-9 ]", " ", sem_acento(texto))).strip()
+    m = re.search(GATILHOS + r"\s+(?:de|como|como um|como uma|as|as a|of)?\s*(.+)", s)
+    if not m:
+        return ""
+    resto = re.split(CORTES, " " + m.group(1) + " ")[0].strip()
+    palavras = resto.split()
+    inuteis = {"um", "uma", "a", "o", "de", "da", "do", "como", "un", "una", "el", "la", "as", "of", "trabalho", "trabalhar", "emprego",
+               "vaga", "vagas", "trabajo", "trabajar", "empleo", "job", "work", "algo", "qualquer", "ser", "para"}
+    while palavras and palavras[0] in inuteis:      # tira só as palavras do começo ("emprego de motorista" -> "motorista")
+        palavras.pop(0)
+    while palavras and palavras[-1] in inuteis:
+        palavras.pop()
+    livre = " ".join(palavras[:4])
+    return livre if len(livre) >= 3 else ""
 
 
 PROMPT = """Você é a atendente de voz do aplicativo BuscaJob IA, que ajuda estudantes (muitos de medicina) a achar trabalho em
@@ -47,6 +69,8 @@ Cidades válidas (id): {cidades}
 Áreas válidas (id): {areas}
 Horários válidos (id): meio, fds, noite (ou vazio)
 Escolha atual na tela: cidade={cidade_atual}, área={area_atual}, horário={periodo_atual}
+REGRA IMPORTANTE: se o aluno falar de OUTRO trabalho ou profissão, TROQUE a área (ou use "livre" se não houver área parecida) e deixe a área antiga de lado.
+Só mantenha a área atual se ele não falar de nenhuma profissão (ex.: só mudou a cidade ou o horário).
 Minha leitura automática da frase: {regra}
 
 Responda SOMENTE com JSON válido:
@@ -60,9 +84,12 @@ IDIOMA_NOME = {"es": "español (neutro, de Paraguay)", "pt": "português do Bras
 def responder(texto, idioma="pt", atual=None, chat=None):
     atual = atual or {}
     regra = entender(texto)
-    base = {k: regra[k] or atual.get(k, "") for k in ("cidade", "area", "periodo")}
+    base = {k: regra[k] or atual.get(k, "") for k in ("cidade", "periodo")}
+    # área: a nova da frase; se ele pediu uma profissão fora da lista, ela substitui a antiga (não guarda a anterior)
+    base["area"] = regra["area"] or ("" if regra["livre"] else atual.get("area", ""))
+    base["livre"] = "" if regra["area"] else regra["livre"]
     if chat is None:
-        return {**base, "livre": "", "resposta": None, "modo": "regra"}
+        return {**base, "resposta": None, "modo": "regra"}
     prompt = PROMPT.format(idioma=IDIOMA_NOME.get(idioma, IDIOMA_NOME["pt"]), cidades=", ".join(sorted(IDS_CIDADE)),
                            areas=", ".join(sorted(IDS_AREA)), cidade_atual=atual.get("cidade", ""), area_atual=atual.get("area", ""),
                            periodo_atual=atual.get("periodo", ""), regra=json.dumps(regra), texto=texto[:400])
@@ -71,12 +98,14 @@ def responder(texto, idioma="pt", atual=None, chat=None):
         d = json.loads(re.search(r"\{.*\}", bruto, re.S).group(0))
     except Exception as erro:  # noqa: BLE001
         log.warning("IA falhou: %s", type(erro).__name__)
-        return {**base, "livre": "", "resposta": None, "modo": "regra"}
+        return {**base, "resposta": None, "modo": "regra"}
+    livre_ia = str(d.get("livre") or "")[:40].strip()
+    area_ia = d.get("area") if d.get("area") in IDS_AREA else ""
     saida = {
         "cidade": d.get("cidade") if d.get("cidade") in IDS_CIDADE else base["cidade"],
-        "area": d.get("area") if d.get("area") in IDS_AREA else base["area"],
+        "area": area_ia or ("" if (livre_ia or base["livre"]) else base["area"]),
         "periodo": d.get("periodo") if d.get("periodo") in IDS_PERIODO else base["periodo"],
-        "livre": str(d.get("livre") or "")[:40].strip(),
+        "livre": "" if area_ia else (livre_ia or base["livre"]),
         "resposta": str(d.get("resposta") or "").strip() or None,
         "modo": "ia",
     }

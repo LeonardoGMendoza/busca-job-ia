@@ -40,6 +40,17 @@ class TestEntender(unittest.TestCase):
         self.assertEqual(r["resposta"], "Pronto!")
         self.assertIn("NÃO tem vagas próprias", ia.prompts[0])
 
+    def test_troca_de_area_nao_guarda_a_antiga(self):
+        r = responder("agora quero vaga de garçom", "pt", {"cidade": "foz", "area": "ti"})
+        self.assertEqual((r["cidade"], r["area"], r["livre"]), ("foz", "garcom", ""))
+        r = responder("quero trabalhar de motorista de van em Foz", "pt", {"area": "ti"})
+        self.assertEqual((r["cidade"], r["area"], r["livre"]), ("foz", "", "motorista de van"))
+        r = responder("busco trabajo de chofer en Lima de noche", "es", {"area": "ti"})
+        self.assertEqual((r["cidade"], r["area"], r["livre"], r["periodo"]), ("lima", "", "chofer", "noite"))
+        ia = IAFalsa('{"cidade": "foz", "area": "ti", "periodo": "", "livre": "", "resposta": "ok"}')
+        r = responder("quero ser motorista de aplicativo", "pt", {"cidade": "foz", "area": "ti"}, ia)
+        self.assertIn("TROQUE a área", ia.prompts[0])
+
     def test_sem_ia_usa_regra_e_escolha_atual(self):
         r = responder("à noite", "pt", {"cidade": "foz", "area": "garcom"})
         self.assertEqual((r["cidade"], r["area"], r["periodo"], r["modo"]), ("foz", "garcom", "noite", "regra"))

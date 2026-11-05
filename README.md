@@ -27,7 +27,20 @@ O termo de busca vai no idioma do país (português no Brasil, espanhol no Parag
 - **Cliques contados** (sites, anúncios, vagas) para mostrar aos parceiros.
 - **IA da Oracle** no servidor (opcional): entende frases livres e responde curto, sem inventar vaga.
 
-## Rodar no PC
+## Site em React (pasta `frontend/`)
+
+O site é feito em **React 19 + Vite** (igual aos outros projetos). O código fica em `frontend/src` e o build vai para `web/`, que é a pasta publicada no GitHub Pages.
+
+```bash
+cd frontend
+npm install
+npm run dev        # http://localhost:5173/?api=   (o "?api=" vazio usa só o navegador, sem servidor)
+npm run build      # gera ../web — depois é só git add/commit/push
+```
+
+A assistente 3D (TalkingHead) fica em `frontend/public/assistente/` e carrega fora do pacote do React.
+
+## Rodar o servidor no PC
 
 ```bash
 cd web && python -m http.server 5500      # abra http://localhost:5500/?api=
