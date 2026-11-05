@@ -1,0 +1,66 @@
+{
+  "_leia": "Vagas publicadas por empresas parceiras. Enquanto 'exemplo' for true, o app avisa que são de EXEMPLO. Atualize pela API PUT /api/vagas/{id}.",
+  "exemplo": true,
+  "vagas": [
+    {
+      "id": "exemplo-1",
+      "empresa": "Restaurante exemplo",
+      "titulo": {
+        "pt": "Garçom meio período (noite)",
+        "es": "Mozo medio tiempo (noche)",
+        "en": "Part-time waiter (night)"
+      },
+      "cidade": "cde",
+      "area": "garcom",
+      "periodo": "noite",
+      "contato": "",
+      "link": "",
+      "publicada": "2026-11-04"
+    },
+    {
+      "id": "exemplo-2",
+      "empresa": "Clínica exemplo",
+      "titulo": {
+        "pt": "Técnico(a) de enfermagem",
+        "es": "Técnico(a) de enfermería",
+        "en": "Nursing technician"
+      },
+      "cidade": "foz",
+      "area": "enfermagem",
+      "periodo": "",
+      "contato": "",
+      "link": "",
+      "publicada": "2026-11-04"
+    },
+    {
+      "id": "exemplo-3",
+      "empresa": "Agência exemplo",
+      "titulo": {
+        "pt": "Recepcionista de eventos (fins de semana)",
+        "es": "Recepcionista de eventos (fines de semana)",
+        "en": "Event receptionist (weekends)"
+      },
+      "cidade": "buenos-aires",
+      "area": "eventos",
+      "periodo": "fds",
+      "contato": "",
+      "link": "",
+      "publicada": "2026-11-04"
+    },
+    {
+      "id": "exemplo-4",
+      "empresa": "Startup exemplo",
+      "titulo": {
+        "pt": "Desenvolvedor(a) React remoto",
+        "es": "Desarrollador(a) React remoto",
+        "en": "Remote React developer"
+      },
+      "cidade": "remoto",
+      "area": "ti",
+      "periodo": "meio",
+      "contato": "",
+      "link": "",
+      "publicada": "2026-11-04"
+    }
+  ]
+}

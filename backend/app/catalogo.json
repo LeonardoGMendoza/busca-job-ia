@@ -1,0 +1,799 @@
+{
+  "_leia": "Catálogo do busca-job-ia: países, cidades, áreas, horários, sites de emprego (links de busca reais) e anúncios. A cópia em web/catalogo.json é a que o site usa; mantenha as duas iguais.",
+  "anuncie": {
+    "whatsapp": "",
+    "email": ""
+  },
+  "paises": {
+    "BR": {
+      "nome": {
+        "pt": "Brasil",
+        "es": "Brasil",
+        "en": "Brazil"
+      },
+      "bandeira": "🇧🇷",
+      "idioma": "pt",
+      "sites": [
+        "indeed_br",
+        "linkedin",
+        "google"
+      ]
+    },
+    "PY": {
+      "nome": {
+        "pt": "Paraguai",
+        "es": "Paraguay",
+        "en": "Paraguay"
+      },
+      "bandeira": "🇵🇾",
+      "idioma": "es",
+      "sites": [
+        "computrabajo_py",
+        "linkedin",
+        "google"
+      ]
+    },
+    "AR": {
+      "nome": {
+        "pt": "Argentina",
+        "es": "Argentina",
+        "en": "Argentina"
+      },
+      "bandeira": "🇦🇷",
+      "idioma": "es",
+      "sites": [
+        "computrabajo_ar",
+        "indeed_ar",
+        "linkedin",
+        "google"
+      ]
+    },
+    "PE": {
+      "nome": {
+        "pt": "Peru",
+        "es": "Perú",
+        "en": "Peru"
+      },
+      "bandeira": "🇵🇪",
+      "idioma": "es",
+      "sites": [
+        "computrabajo_pe",
+        "indeed_pe",
+        "linkedin",
+        "google"
+      ]
+    },
+    "REMOTO": {
+      "nome": {
+        "pt": "Home office",
+        "es": "Remoto",
+        "en": "Remote"
+      },
+      "bandeira": "🌎",
+      "idioma": "en",
+      "sites": [
+        "linkedin_remoto",
+        "wwr",
+        "remoteok",
+        "google_remoto"
+      ]
+    }
+  },
+  "cidades": [
+    {
+      "id": "foz",
+      "nome": "Foz do Iguaçu",
+      "pais": "BR",
+      "slug": "foz-do-iguacu",
+      "local": "Foz do Iguaçu, PR",
+      "palavras": [
+        "foz",
+        "iguacu",
+        "iguazu"
+      ]
+    },
+    {
+      "id": "ponta-pora",
+      "nome": "Ponta Porã",
+      "pais": "BR",
+      "slug": "ponta-pora",
+      "local": "Ponta Porã, MS",
+      "palavras": [
+        "ponta pora",
+        "ponta poran",
+        "pontapora"
+      ]
+    },
+    {
+      "id": "sao-borja",
+      "nome": "São Borja",
+      "pais": "BR",
+      "slug": "sao-borja",
+      "local": "São Borja, RS",
+      "palavras": [
+        "sao borja",
+        "borja"
+      ]
+    },
+    {
+      "id": "cde",
+      "nome": "Ciudad del Este",
+      "pais": "PY",
+      "slug": "ciudad-del-este",
+      "local": "Ciudad del Este, Paraguay",
+      "palavras": [
+        "ciudad del este",
+        "cidade do leste",
+        "cidade del este",
+        "cde"
+      ]
+    },
+    {
+      "id": "asuncion",
+      "nome": "Asunción",
+      "pais": "PY",
+      "slug": "asuncion",
+      "local": "Asunción, Paraguay",
+      "palavras": [
+        "asuncion",
+        "assuncao",
+        "asuncao"
+      ]
+    },
+    {
+      "id": "buenos-aires",
+      "nome": "Buenos Aires",
+      "pais": "AR",
+      "slug": "capital-federal",
+      "local": "Buenos Aires, Argentina",
+      "palavras": [
+        "buenos aires",
+        "bs as",
+        "capital federal",
+        "caba"
+      ]
+    },
+    {
+      "id": "la-plata",
+      "nome": "La Plata",
+      "pais": "AR",
+      "slug": "la-plata",
+      "local": "La Plata, Buenos Aires, Argentina",
+      "palavras": [
+        "la plata"
+      ]
+    },
+    {
+      "id": "cordoba",
+      "nome": "Córdoba",
+      "pais": "AR",
+      "slug": "cordoba",
+      "local": "Córdoba, Argentina",
+      "palavras": [
+        "cordoba"
+      ]
+    },
+    {
+      "id": "mar-del-plata",
+      "nome": "Mar del Plata",
+      "pais": "AR",
+      "slug": "mar-del-plata",
+      "local": "Mar del Plata, Argentina",
+      "palavras": [
+        "mar del plata",
+        "mar de plata"
+      ]
+    },
+    {
+      "id": "rosario",
+      "nome": "Rosario",
+      "pais": "AR",
+      "slug": "rosario",
+      "local": "Rosario, Santa Fe, Argentina",
+      "palavras": [
+        "rosario"
+      ]
+    },
+    {
+      "id": "mendoza",
+      "nome": "Mendoza",
+      "pais": "AR",
+      "slug": "mendoza",
+      "local": "Mendoza, Argentina",
+      "palavras": [
+        "mendoza"
+      ]
+    },
+    {
+      "id": "lima",
+      "nome": "Lima",
+      "pais": "PE",
+      "slug": "lima",
+      "local": "Lima, Perú",
+      "palavras": [
+        "lima"
+      ]
+    },
+    {
+      "id": "remoto",
+      "nome": "Home office (mundo)",
+      "pais": "REMOTO",
+      "slug": "",
+      "local": "Remote",
+      "palavras": [
+        "home office",
+        "remoto",
+        "remote",
+        "de casa",
+        "qualquer lugar",
+        "cualquier lugar",
+        "mundo"
+      ]
+    }
+  ],
+  "areas": [
+    {
+      "id": "ti",
+      "icone": "💻",
+      "nome": {
+        "pt": "TI / Dev",
+        "es": "TI / Dev",
+        "en": "IT / Dev"
+      },
+      "termo": {
+        "pt": "desenvolvedor",
+        "es": "desarrollador",
+        "en": "developer"
+      },
+      "palavras": [
+        "ti",
+        "dev",
+        "desenvolvedor",
+        "programador",
+        "desarrollador",
+        "developer",
+        "software",
+        "sistemas",
+        "informatica",
+        "tecnologia"
+      ]
+    },
+    {
+      "id": "enfermagem",
+      "icone": "🩺",
+      "nome": {
+        "pt": "Enfermagem",
+        "es": "Enfermería",
+        "en": "Nursing"
+      },
+      "termo": {
+        "pt": "enfermeiro",
+        "es": "enfermero",
+        "en": "nurse"
+      },
+      "palavras": [
+        "enfermeira",
+        "enfermeiro",
+        "enfermagem",
+        "enfermera",
+        "enfermero",
+        "enfermeria",
+        "nurse",
+        "tecnico de enfermagem"
+      ]
+    },
+    {
+      "id": "cuidador",
+      "icone": "🧓",
+      "nome": {
+        "pt": "Cuidador(a)",
+        "es": "Cuidador(a)",
+        "en": "Caregiver"
+      },
+      "termo": {
+        "pt": "cuidador de idosos",
+        "es": "cuidador adulto mayor",
+        "en": "caregiver"
+      },
+      "palavras": [
+        "cuidador",
+        "cuidadora",
+        "idosos",
+        "adulto mayor",
+        "caregiver",
+        "acompanhante"
+      ]
+    },
+    {
+      "id": "garcom",
+      "icone": "🍽️",
+      "nome": {
+        "pt": "Garçom",
+        "es": "Mozo / Mesero",
+        "en": "Waiter"
+      },
+      "termo": {
+        "pt": "garçom",
+        "es": "mozo",
+        "en": "waiter"
+      },
+      "palavras": [
+        "garcom",
+        "garconete",
+        "mozo",
+        "moza",
+        "mesero",
+        "mesera",
+        "waiter",
+        "waitress",
+        "restaurante",
+        "bar"
+      ]
+    },
+    {
+      "id": "cozinha",
+      "icone": "👨‍🍳",
+      "nome": {
+        "pt": "Cozinha",
+        "es": "Cocina",
+        "en": "Kitchen"
+      },
+      "termo": {
+        "pt": "auxiliar de cozinha",
+        "es": "ayudante de cocina",
+        "en": "kitchen helper"
+      },
+      "palavras": [
+        "cozinha",
+        "cozinheiro",
+        "cocina",
+        "cocinero",
+        "kitchen",
+        "cook",
+        "chapeiro"
+      ]
+    },
+    {
+      "id": "limpeza",
+      "icone": "🧹",
+      "nome": {
+        "pt": "Limpeza / Airbnb",
+        "es": "Limpieza / Airbnb",
+        "en": "Cleaning / Airbnb"
+      },
+      "termo": {
+        "pt": "limpeza",
+        "es": "limpieza",
+        "en": "housekeeping"
+      },
+      "palavras": [
+        "limpeza",
+        "faxina",
+        "airbnb",
+        "arb",
+        "limpieza",
+        "housekeeping",
+        "cleaning",
+        "camareira",
+        "mucama"
+      ]
+    },
+    {
+      "id": "eventos",
+      "icone": "🎉",
+      "nome": {
+        "pt": "Eventos",
+        "es": "Eventos",
+        "en": "Events"
+      },
+      "termo": {
+        "pt": "eventos",
+        "es": "eventos",
+        "en": "event staff"
+      },
+      "palavras": [
+        "evento",
+        "eventos",
+        "festa",
+        "fiesta",
+        "promotor",
+        "promotora",
+        "recepcionista de eventos",
+        "event"
+      ]
+    },
+    {
+      "id": "atendimento",
+      "icone": "🎧",
+      "nome": {
+        "pt": "Atendimento",
+        "es": "Atención al cliente",
+        "en": "Customer support"
+      },
+      "termo": {
+        "pt": "atendente",
+        "es": "atención al cliente",
+        "en": "customer support"
+      },
+      "palavras": [
+        "atendimento",
+        "atendente",
+        "atencion al cliente",
+        "call center",
+        "telemarketing",
+        "suporte",
+        "soporte",
+        "support",
+        "recepcionista"
+      ]
+    },
+    {
+      "id": "vendas",
+      "icone": "🛍️",
+      "nome": {
+        "pt": "Vendas",
+        "es": "Ventas",
+        "en": "Sales"
+      },
+      "termo": {
+        "pt": "vendedor",
+        "es": "vendedor",
+        "en": "sales"
+      },
+      "palavras": [
+        "vendas",
+        "vendedor",
+        "vendedora",
+        "ventas",
+        "loja",
+        "tienda",
+        "sales",
+        "comercio"
+      ]
+    },
+    {
+      "id": "entregas",
+      "icone": "🛵",
+      "nome": {
+        "pt": "Entregas",
+        "es": "Delivery",
+        "en": "Delivery"
+      },
+      "termo": {
+        "pt": "entregador",
+        "es": "repartidor",
+        "en": "delivery driver"
+      },
+      "palavras": [
+        "entrega",
+        "entregas",
+        "entregador",
+        "delivery",
+        "repartidor",
+        "motoboy",
+        "rappi",
+        "ifood",
+        "pedidosya"
+      ]
+    },
+    {
+      "id": "aulas",
+      "icone": "📚",
+      "nome": {
+        "pt": "Aulas particulares",
+        "es": "Clases particulares",
+        "en": "Tutoring"
+      },
+      "termo": {
+        "pt": "professor particular",
+        "es": "profesor particular",
+        "en": "tutor"
+      },
+      "palavras": [
+        "aula",
+        "aulas",
+        "professor",
+        "professora",
+        "profesor",
+        "clases",
+        "tutor",
+        "monitor",
+        "reforco",
+        "tutoring",
+        "teacher",
+        "ensenar"
+      ]
+    },
+    {
+      "id": "idiomas",
+      "icone": "🗣️",
+      "nome": {
+        "pt": "Ensinar português",
+        "es": "Enseñar portugués",
+        "en": "Teach Portuguese"
+      },
+      "termo": {
+        "pt": "professor de português",
+        "es": "profesor de portugués",
+        "en": "portuguese teacher"
+      },
+      "palavras": [
+        "portugues",
+        "ensinar portugues",
+        "profesor de portugues",
+        "idiomas",
+        "idioma",
+        "portuguese",
+        "teach portuguese",
+        "portuguese teacher",
+        "clases de portugues",
+        "aulas de portugues"
+      ]
+    },
+    {
+      "id": "marketing",
+      "icone": "📈",
+      "nome": {
+        "pt": "Marketing digital",
+        "es": "Marketing digital",
+        "en": "Digital marketing"
+      },
+      "termo": {
+        "pt": "marketing digital",
+        "es": "marketing digital",
+        "en": "digital marketing"
+      },
+      "palavras": [
+        "marketing",
+        "redes sociais",
+        "redes sociales",
+        "social media",
+        "trafego pago",
+        "community manager"
+      ]
+    }
+  ],
+  "periodos": [
+    {
+      "id": "",
+      "nome": {
+        "pt": "Qualquer horário",
+        "es": "Cualquier horario",
+        "en": "Any time"
+      },
+      "termo": {
+        "pt": "",
+        "es": "",
+        "en": ""
+      },
+      "palavras": []
+    },
+    {
+      "id": "meio",
+      "nome": {
+        "pt": "Meio período",
+        "es": "Medio tiempo",
+        "en": "Part time"
+      },
+      "termo": {
+        "pt": "meio período",
+        "es": "medio tiempo",
+        "en": "part time"
+      },
+      "palavras": [
+        "meio periodo",
+        "meio turno",
+        "medio tiempo",
+        "media jornada",
+        "part time",
+        "part-time",
+        "algumas horas",
+        "pocas horas"
+      ]
+    },
+    {
+      "id": "fds",
+      "nome": {
+        "pt": "Fim de semana",
+        "es": "Fines de semana",
+        "en": "Weekends"
+      },
+      "termo": {
+        "pt": "fim de semana",
+        "es": "fines de semana",
+        "en": "weekend"
+      },
+      "palavras": [
+        "fim de semana",
+        "fins de semana",
+        "sabado",
+        "domingo",
+        "fines de semana",
+        "fin de semana",
+        "weekend"
+      ]
+    },
+    {
+      "id": "noite",
+      "nome": {
+        "pt": "À noite",
+        "es": "De noche",
+        "en": "Night"
+      },
+      "termo": {
+        "pt": "noturno",
+        "es": "nocturno",
+        "en": "night shift"
+      },
+      "palavras": [
+        "noite",
+        "noturno",
+        "noche",
+        "nocturno",
+        "night"
+      ]
+    }
+  ],
+  "sites": {
+    "indeed_br": {
+      "nome": "Indeed Brasil",
+      "url": "https://br.indeed.com/jobs?q={q}&l={local}"
+    },
+    "indeed_ar": {
+      "nome": "Indeed Argentina",
+      "url": "https://ar.indeed.com/jobs?q={q}&l={local}"
+    },
+    "indeed_pe": {
+      "nome": "Indeed Perú",
+      "url": "https://pe.indeed.com/jobs?q={q}&l={local}"
+    },
+    "computrabajo_py": {
+      "nome": "Computrabajo Paraguay",
+      "url": "https://py.computrabajo.com/trabajo-de-{qslug}-en-{slug}"
+    },
+    "computrabajo_ar": {
+      "nome": "Computrabajo Argentina",
+      "url": "https://ar.computrabajo.com/trabajo-de-{qslug}-en-{slug}"
+    },
+    "computrabajo_pe": {
+      "nome": "Computrabajo Perú",
+      "url": "https://pe.computrabajo.com/trabajo-de-{qslug}-en-{slug}"
+    },
+    "linkedin": {
+      "nome": "LinkedIn",
+      "url": "https://www.linkedin.com/jobs/search/?keywords={q}&location={local}"
+    },
+    "linkedin_remoto": {
+      "nome": "LinkedIn (remoto)",
+      "url": "https://www.linkedin.com/jobs/search/?keywords={q}&f_WT=2"
+    },
+    "google": {
+      "nome": "Google Vagas",
+      "url": "https://www.google.com/search?q={q}+{local}&ibp=htl;jobs"
+    },
+    "google_remoto": {
+      "nome": "Google Vagas (remoto)",
+      "url": "https://www.google.com/search?q={q}+remote&ibp=htl;jobs"
+    },
+    "wwr": {
+      "nome": "We Work Remotely",
+      "url": "https://weworkremotely.com/remote-jobs/search?term={q}"
+    },
+    "remoteok": {
+      "nome": "Remote OK",
+      "url": "https://remoteok.com/remote-{qslug}-jobs"
+    }
+  },
+  "anuncios": [
+    {
+      "id": "enfermeira-feridas",
+      "tipo": "banner",
+      "ativo": true,
+      "cor": "#009688",
+      "icone": "🩺",
+      "titulo": {
+        "pt": "Enfermeira Feridas",
+        "es": "Enfermeira Feridas",
+        "en": "Enfermeira Feridas"
+      },
+      "texto": {
+        "pt": "Cuidado Especializado",
+        "es": "Cuidado especializado",
+        "en": "Specialized care"
+      },
+      "link": "https://enfermeiraferidas.com.br/"
+    },
+    {
+      "id": "serenya",
+      "tipo": "banner",
+      "ativo": true,
+      "cor": "#f06292",
+      "icone": "❤️",
+      "titulo": {
+        "pt": "Serenya Home Care",
+        "es": "Serenya Home Care",
+        "en": "Serenya Home Care"
+      },
+      "texto": {
+        "pt": "Cuidamos de histórias",
+        "es": "Cuidamos historias",
+        "en": "We care for stories"
+      },
+      "link": "https://serenyahomecare.com.br/"
+    },
+    {
+      "id": "doutor-feridas",
+      "tipo": "banner",
+      "ativo": true,
+      "cor": "#3f51b5",
+      "icone": "🩹",
+      "titulo": {
+        "pt": "Doutor Feridas",
+        "es": "Doutor Feridas",
+        "en": "Doutor Feridas"
+      },
+      "texto": {
+        "pt": "Tratamento Complexo",
+        "es": "Tratamiento complejo",
+        "en": "Complex treatment"
+      },
+      "link": "https://www.doutorferidas.com.br/?utm_source=organico&utm_medium=site+institucional&utm_campaign=seo&utm_term=organico&utm_content=organico"
+    },
+    {
+      "id": "anuncie",
+      "tipo": "banner",
+      "ativo": true,
+      "cor": "#f4b400",
+      "icone": "📣",
+      "titulo": {
+        "pt": "Sua empresa contratando?",
+        "es": "¿Tu empresa contrata?",
+        "en": "Hiring?"
+      },
+      "texto": {
+        "pt": "Publique sua vaga para estudantes da fronteira",
+        "es": "Publica tu vacante para estudiantes",
+        "en": "Post your job for students"
+      },
+      "link": ""
+    },
+    {
+      "id": "ucp-jalecos",
+      "tipo": "promo",
+      "ativo": true,
+      "cor": "#1e88e5",
+      "selo": "UCP",
+      "imagem": "https://images.unsplash.com/photo-1584432810601-6c7f27d2362b?q=80&w=500",
+      "titulo": {
+        "pt": "Jalecos Azuis Oficiais",
+        "es": "Batas azules oficiales",
+        "en": "Official blue coats"
+      },
+      "texto": {
+        "pt": "Comprar",
+        "es": "Comprar",
+        "en": "Buy"
+      },
+      "link": ""
+    },
+    {
+      "id": "umax-uniformes",
+      "tipo": "promo",
+      "ativo": true,
+      "cor": "#e53935",
+      "selo": "UMAX",
+      "imagem": "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?q=80&w=500",
+      "titulo": {
+        "pt": "Uniformes Vermelhos",
+        "es": "Uniformes rojos",
+        "en": "Red uniforms"
+      },
+      "texto": {
+        "pt": "Ver modelos",
+        "es": "Ver modelos",
+        "en": "See models"
+      },
+      "link": ""
+    }
+  ]
+}

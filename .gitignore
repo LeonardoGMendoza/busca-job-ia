@@ -1,0 +1,10 @@
+# Segredos
+.env
+backend/.env
+# Dados gerados pelo servidor (cotações atualizadas, cliques dos parceiros)
+backend/data/
+data/
+# Python / Node
+__pycache__/
+.venv/
+node_modules/
