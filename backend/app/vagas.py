@@ -264,21 +264,27 @@ class BuscaReal:
         return bool(self.jsearch_key or any(self.jooble.values()))
 
     # ---- provedores ----
+    def _jsearch_url(self, params):
+        if self.jsearch_rapidapi:
+            return ("https://jsearch.p.rapidapi.com/search?" + urllib.parse.urlencode(params),
+                    {"X-RapidAPI-Key": self.jsearch_key, "X-RapidAPI-Host": "jsearch.p.rapidapi.com"})
+        return "https://api.openwebninja.com/jsearch/search?" + urllib.parse.urlencode(params), {"x-api-key": self.jsearch_key}
+
     def _jsearch(self, t):
         remoto = t["pais"] == "REMOTO"
-        consulta = f'{t["q"]} remote' if remoto else f'{t["q"]} {t["cidade"]["local"]}'
-        params = {"query": consulta, "page": "1", "num_pages": "1", "date_posted": "month"}
         if remoto:
-            params["work_from_home"] = "true"
+            tentativas = [{"query": f'{t["q"]} remote', "work_from_home": "true"}]
         else:
-            params["country"] = PAIS_CODIGO[t["pais"]]
-        if self.jsearch_rapidapi:
-            url = "https://jsearch.p.rapidapi.com/search?" + urllib.parse.urlencode(params)
-            cab = {"X-RapidAPI-Key": self.jsearch_key, "X-RapidAPI-Host": "jsearch.p.rapidapi.com"}
-        else:
-            url = "https://api.openwebninja.com/jsearch/search?" + urllib.parse.urlencode(params)
-            cab = {"x-api-key": self.jsearch_key}
-        bruto = self.http(url, cabecalhos=cab)
+            pais = PAIS_CODIGO[t["pais"]]
+            # 1ª: termo completo + cidade no país; 2ª (só se vier vazio): só a profissão + nome da cidade, sem jornada
+            tentativas = [{"query": f'{t["q"]} {t["cidade"]["local"]}', "country": pais},
+                          {"query": f'{t["base"]} {t["cidade"]["nome"]}', "country": pais}]
+        bruto = {}
+        for extra in tentativas:
+            url, cab = self._jsearch_url({"page": "1", "num_pages": "1", "date_posted": "month", **extra})
+            bruto = self.http(url, cabecalhos=cab)
+            if bruto.get("data"):
+                break
         saida = []
         for j in (bruto.get("data") or [])[:20]:
             salario = ""

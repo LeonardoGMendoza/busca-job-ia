@@ -139,3 +139,18 @@ class TestErroNaoFicaNoCache(unittest.TestCase):
         self.assertEqual(r["erros"], ["JSearch: OSError"])
         b.buscar("foz", "ti")
         self.assertEqual(len(n), 2)
+
+
+class TestSegundaTentativa(unittest.TestCase):
+    def test_busca_mais_ampla_quando_vazio(self):
+        from app.vagas import BuscaReal
+        urls = []
+
+        def http(url, **k):
+            urls.append(url)
+            return {"data": []} if len(urls) == 1 else {"data": [{"job_title": "Mesero", "employer_name": "X", "job_apply_link": "https://x"}]}
+        r = BuscaReal(env={"JSEARCH_KEY": "k"}, http=http).buscar("cde", "garcom", periodo_id="noite")
+        self.assertEqual(len(urls), 2)
+        self.assertIn("mozo+nocturno+Ciudad+del+Este%2C+Paraguay", urls[0])
+        self.assertIn("query=mozo+Ciudad+del+Este&", urls[1])
+        self.assertEqual(r["vagas"][0]["titulo"], "Mesero")
