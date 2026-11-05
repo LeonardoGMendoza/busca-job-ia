@@ -1,6 +1,6 @@
 // Atendente 3D que fala (mesma técnica do StudentMedical/VinaCare: TalkingHead + boca sincronizada com a voz do aparelho).
-import { TalkingHead } from './talkinghead/talkinghead.mjs';
-import { LipsyncPt_br } from './talkinghead/lipsync-pt_br.mjs';
+import { TalkingHead } from './talkinghead/talkinghead.mjs?v=2';
+import { LipsyncPt_br } from './talkinghead/lipsync-pt_br.mjs?v=2';
 
 const AVATAR = {
   url: new URL('avatars/avaturn.glb', document.baseURI).href, body: 'F', avatarMood: 'happy', lipsyncLang: 'pt_br',

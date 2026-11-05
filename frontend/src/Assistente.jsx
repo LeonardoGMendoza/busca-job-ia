@@ -27,7 +27,7 @@ export default function Assistente({ idioma, t, onPergunta }) {
     let vivo = true;
     (async () => {
       try {
-        const url = new URL('assistente/atendente.js', document.baseURI).href;
+        const url = new URL('assistente/atendente.js?v=2', document.baseURI).href;
         const { Atendente } = await import(/* @vite-ignore */ url);
         const a = new Atendente(caixa.current);
         await a.carregar();

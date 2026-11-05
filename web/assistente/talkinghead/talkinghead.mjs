@@ -31,8 +31,8 @@ import { FBXLoader } from 'three/addons/loaders/FBXLoader.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import Stats from 'three/addons/libs/stats.module.js';
 
-import { retarget } from './retargeter.mjs';
-import{ DynamicBones } from './dynamicbones.mjs';
+import { retarget } from './retargeter.mjs?v=2';
+import{ DynamicBones } from './dynamicbones.mjs?v=2';
 const workletUrl = new URL('playback-worklet.js', document.baseURI); // VinaCare: arquivo em public/
 
 // Temporary objects for animation loop
