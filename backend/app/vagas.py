@@ -242,7 +242,7 @@ def termo_busca(cidade_id, area_id="", livre="", periodo_id="", com_jornada=True
     return {"q": q, "base": base, "cidade": cidade, "pais": cidade["pais"], "lingua": lingua}
 
 
-def _http_json(url, metodo="GET", corpo=None, cabecalhos=None, timeout=20):
+def _http_json(url, metodo="GET", corpo=None, cabecalhos=None, timeout=35):
     dados = json.dumps(corpo).encode("utf-8") if corpo is not None else None
     pedido = urllib.request.Request(url, data=dados, method=metodo, headers={"User-Agent": "BuscaJobIA/0.2", **(cabecalhos or {})})
     if dados is not None:
@@ -291,7 +291,9 @@ class BuscaReal:
             if j.get("job_min_salary") or j.get("job_max_salary"):
                 faixa = " - ".join(str(int(v)) for v in (j.get("job_min_salary"), j.get("job_max_salary")) if v)
                 salario = f'{faixa} {j.get("job_salary_currency") or ""} {j.get("job_salary_period") or ""}'.strip()
-            saida.append({"titulo": j.get("job_title"), "empresa": j.get("employer_name"), "local": j.get("job_location") or ("Remote" if remoto else t["cidade"]["nome"]),
+            local = re.split(r"\s*[•·]\s*", (j.get("job_location") or "").strip())[0].strip()
+            local = local.replace("Cd. del Este", "Ciudad del Este")
+            saida.append({"titulo": j.get("job_title"), "empresa": j.get("employer_name"), "local": local or ("Remote" if remoto else t["cidade"]["nome"]),
                           "link": j.get("job_apply_link"), "fonte": j.get("job_publisher") or "Google Vagas", "data": (j.get("job_posted_at_datetime_utc") or "")[:10],
                           "salario": salario, "tipo": j.get("job_employment_type") or "", "remoto": bool(j.get("job_is_remote")),
                           "resumo": (j.get("job_description") or "")[:220]})

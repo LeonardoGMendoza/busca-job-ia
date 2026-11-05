@@ -93,6 +93,10 @@ a { color: var(--azul-600); }
 .esqueleto span { display: block; height: 12px; border-radius: 6px; background: linear-gradient(90deg, var(--cinza-100), var(--cinza-200), var(--cinza-100)); background-size: 200% 100%; animation: brilho 1.2s infinite; }
 .esqueleto span + span { width: 55%; margin-top: 8px; }
 @keyframes brilho { to { background-position: -200% 0; } }
+.convite-empresa { display: flex; align-items: center; gap: 14px; text-decoration: none; color: inherit; padding: 16px 20px; color: var(--cinza-700); }
+.convite-empresa:hover { border-color: var(--azul-500); }
+.convite-empresa strong { display: block; color: var(--cinza-900); font-weight: 600; }
+.convite-empresa small { display: block; font-size: 13px; color: var(--cinza-500); }
 .fonte { font-size: 12px; color: var(--cinza-500); margin: 10px 0 0; }
 
 /* assistente */

@@ -2,6 +2,7 @@ export const LOCALE = { pt: 'pt-BR', es: 'es-PY', en: 'en-US' };
 
 export const T = {
   pt: {
+    conviteTitulo: 'Sua empresa está contratando?', conviteTexto: 'Publique sua vaga aqui e fale direto com estudantes da região.',
     encontradas: (c, l) => `Vagas de ${c} em ${l}`, procurando: 'Procurando vagas publicadas nos últimos 30 dias…',
     encontradasSub: (n, f) => `${n} vagas reais encontradas (${f}). Toque em "Candidatar-se" para ir à vaga.`,
     nenhumaReal: 'Nenhuma vaga encontrada agora. Veja também os portais abaixo.', maisPortais: 'Ver mais nos portais de emprego',
@@ -33,6 +34,7 @@ export const T = {
     publicada: 'Publicada em', qualquer: 'Qualquer jornada'
   },
   es: {
+    conviteTitulo: '¿Tu empresa está contratando?', conviteTexto: 'Publica tu vacante aquí y llega directo a estudiantes de la región.',
     encontradas: (c, l) => `Empleos de ${c} en ${l}`, procurando: 'Buscando vacantes publicadas en los últimos 30 días…',
     encontradasSub: (n, f) => `${n} vacantes reales encontradas (${f}). Toca "Postularme" para ir a la vacante.`,
     nenhumaReal: 'No encontramos vacantes ahora. Mira también los portales de abajo.', maisPortais: 'Ver más en los portales de empleo',
@@ -64,6 +66,7 @@ export const T = {
     publicada: 'Publicada el', qualquer: 'Cualquier jornada'
   },
   en: {
+    conviteTitulo: 'Is your company hiring?', conviteTexto: 'Post your job here and reach students in the region directly.',
     encontradas: (c, l) => `${c} jobs in ${l}`, procurando: 'Looking for jobs posted in the last 30 days…',
     encontradasSub: (n, f) => `${n} real openings found (${f}). Tap "Apply" to open the job.`,
     nenhumaReal: 'No openings found right now. Check the job boards below too.', maisPortais: 'See more on the job boards',

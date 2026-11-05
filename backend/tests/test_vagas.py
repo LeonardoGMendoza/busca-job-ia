@@ -154,3 +154,12 @@ class TestSegundaTentativa(unittest.TestCase):
         self.assertIn("mozo+nocturno+Ciudad+del+Este%2C+Paraguay", urls[0])
         self.assertIn("query=mozo+Ciudad+del+Este&", urls[1])
         self.assertEqual(r["vagas"][0]["titulo"], "Mesero")
+
+
+class TestLocalLimpo(unittest.TestCase):
+    def test_local(self):
+        from app.vagas import BuscaReal
+        http = lambda url, **k: {"data": [{"job_title": "A", "employer_name": "B", "job_apply_link": "https://a",
+                                           "job_location": "Cd. del Este     •  a través de LinkedIn Paraguay"}]}
+        r = BuscaReal(env={"JSEARCH_KEY": "k"}, http=http).buscar("cde", "atendimento")
+        self.assertEqual(r["vagas"][0]["local"], "Ciudad del Este")

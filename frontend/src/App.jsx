@@ -260,10 +260,10 @@ export default function App() {
             </section>
           )}
 
-          <section className="card">
-            <div className="card-cabeca"><h2><Predio /> {t.parceiros}</h2></div>
-            {vagas.exemplo && <p className="nota nota-alerta"><Info /><span>{t.exemploAviso}</span></p>}
-            {parceiras.length ? (
+          {/* vagas publicadas por empresas parceiras: só aparecem quando são reais; até lá, um convite discreto */}
+          {!vagas.exemplo && parceiras.length > 0 ? (
+            <section className="card">
+              <div className="card-cabeca"><h2><Predio /> {t.parceiros}</h2></div>
               <ul className="vagas">
                 {parceiras.map(v => {
                   const c = cat.cidades.find(x => x.id === v.cidade), p = cat.periodos.find(x => x.id === v.periodo);
@@ -271,7 +271,7 @@ export default function App() {
                   return (
                     <li key={v.id} className="vaga">
                       <div>
-                        <strong>{txt(v.titulo)} {vagas.exemplo && <span className="selo">{t.exemplo}</span>}</strong>
+                        <strong>{txt(v.titulo)}</strong>
                         <span className="vaga-meta">{v.empresa} · {c?.nome}{p?.id ? ` · ${txt(p.nome)}` : ''}{v.publicada ? ` · ${t.publicada} ${new Date(v.publicada + 'T12:00').toLocaleDateString(LOCALE[idioma])}` : ''}</span>
                       </div>
                       {contato && <a className="btn btn-primario" href={contato} target="_blank" rel="noopener noreferrer" onClick={() => registrar('vaga', v.id)}>{t.candidatar}</a>}
@@ -279,8 +279,13 @@ export default function App() {
                   );
                 })}
               </ul>
-            ) : <p className="sub">{t.semParceiro}</p>}
-          </section>
+            </section>
+          ) : (
+            <a className="card convite-empresa" href={zap ? `https://wa.me/${zap}` : undefined}>
+              <Predio />
+              <span><strong>{t.conviteTitulo}</strong><small>{t.conviteTexto}</small></span>
+            </a>
+          )}
         </div>
 
         <aside className="coluna-lateral">
