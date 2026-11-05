@@ -124,3 +124,18 @@ class TestBuscaReal(unittest.TestCase):
         b.buscar("remoto", livre="motorista de van")
         self.assertIn("work_from_home=true", urls[0])
         self.assertIn("motorista+de+van+remote", urls[0])
+
+
+class TestErroNaoFicaNoCache(unittest.TestCase):
+    def test_erro(self):
+        from app.vagas import BuscaReal
+        n = []
+
+        def http(url, **k):
+            n.append(1)
+            raise OSError("sem rede")
+        b = BuscaReal(env={"JSEARCH_KEY": "k"}, http=http)
+        r = b.buscar("foz", "ti")
+        self.assertEqual(r["erros"], ["JSearch: OSError"])
+        b.buscar("foz", "ti")
+        self.assertEqual(len(n), 2)

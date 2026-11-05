@@ -224,6 +224,7 @@ class Remotas:
 # Só usa serviços que liberam os dados por API (sem robô em Indeed/LinkedIn). Cache de 6 h para gastar pouca cota.
 # ---------------------------------------------------------------------------------------------
 import os  # noqa: E402
+import urllib.error  # noqa: E402
 import urllib.parse  # noqa: E402
 
 PAIS_CODIGO = {"BR": "br", "PY": "py", "AR": "ar", "PE": "pe"}
@@ -311,7 +312,7 @@ class BuscaReal:
             em_cache = self._cache.get(chave)
             if em_cache and time.time() - em_cache[0] < self.validade:
                 return em_cache[1]
-        vagas, fontes = [], []
+        vagas, fontes, erros = [], [], []
         for nome, funcao in (("JSearch", self._jsearch if self.jsearch_key else None), ("Jooble", self._jooble)):
             if not funcao:
                 continue
@@ -320,8 +321,17 @@ class BuscaReal:
                 if achadas:
                     fontes.append(nome)
                 vagas.extend(achadas)
+            except urllib.error.HTTPError as erro:
+                corpo = ""
+                try:
+                    corpo = erro.read().decode("utf-8", "replace")[:200]
+                except Exception:  # noqa: BLE001
+                    pass
+                log.warning("%s falhou: HTTP %s %s", nome, erro.code, corpo)
+                erros.append(f"{nome}: HTTP {erro.code} {corpo}".strip())
             except Exception as erro:  # noqa: BLE001
-                log.warning("%s falhou: %s", nome, type(erro).__name__)
+                log.warning("%s falhou: %s %s", nome, type(erro).__name__, erro)
+                erros.append(f"{nome}: {type(erro).__name__}")
         vistos, unicas = set(), []
         for v in vagas:
             k = (sem_acento(v["titulo"] or ""), sem_acento(v["empresa"] or ""))
@@ -329,6 +339,9 @@ class BuscaReal:
                 vistos.add(k)
                 unicas.append(v)
         resultado = {"vagas": unicas[:30], "fontes": fontes, "ligada": self.ligada, "termo": t["q"]}
+        if erros:
+            resultado["erros"] = erros          # mostra o motivo (sem a chave) e NÃO guarda no cache
+            return resultado
         with self._lock:
             self._cache[chave] = (time.time(), resultado)
         return resultado
