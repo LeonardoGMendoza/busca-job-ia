@@ -29,6 +29,24 @@ Com o servidor ligado e uma chave configurada, o app mostra as vagas de verdade 
 Cada busca fica 6 horas em cache, para gastar pouca cota. Rota: `GET /api/buscar?cidade=&area=&livre=&periodo=`.
 Não usamos robôs no Indeed/LinkedIn/Computrabajo (os termos deles proíbem): só APIs que liberam os dados.
 
+## Busca de vagas .NET com nota de compatibilidade (uso pessoal)
+
+Script que procura vagas de desenvolvedor .NET (remotas e em Foz do Iguaçu), compara com o perfil do Leonardo e gera uma planilha ordenada da melhor para a pior. **Não se candidata sozinho**: você abre o link e envia o currículo.
+
+```bash
+cd backend
+pip install -r requirements.txt
+copy .env.example .env            # coloque JSEARCH_KEY (e/ou JOOBLE_KEY_BR)
+python buscar_dev.py              # gera saida/vagas_AAAA-MM-DD.xlsx e .csv
+python buscar_dev.py --dias 7     # só vagas dos últimos 7 dias
+python buscar_dev.py --arquivo vaga.txt   # nota de UMA vaga colada (LinkedIn, e-mail do RH...)
+python -m unittest discover tests
+```
+
+- A nota (0 a 100) soma: título (30), tecnologias que casam (45), nível pleno (15) e local/remoto (10). A planilha mostra o que **casou**, o que **falta** (Kubernetes, AWS, Kafka...) e **alertas** (sênior, inglês fluente, presencial longe, stack diferente).
+- Ajuste pesos, buscas e cidade em `backend/perfil_leonardo.json`. Coluna `status` fica livre para você marcar enviado, entrevista etc.
+- Usa só APIs que liberam os dados (JSearch e Jooble), sem robô no LinkedIn/Indeed.
+
 ## Moradia para estudantes (aba "Moradia")
 
 - **Locais reais** (pensionatos, residências estudantis, imobiliárias) com endereço, telefone, nota e mapa, vindos do Google Maps pela API **Local Business Data** da OpenWeb Ninja — usa a mesma chave (`JSEARCH_KEY`), mas é preciso ativar o plano grátis dessa API no painel. Rota: `GET /api/moradia?cidade=&tipo=` (cache 24 h).

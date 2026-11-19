@@ -3,3 +3,4 @@ uvicorn==0.54.0
 pydantic==2.14.0
 # IA da Oracle Cloud (Generative AI) - a mesma conta do VinaCare/StudentMedical/CambioFronteira
 oci>=2.150,<3
+openpyxl>=3.1,<4

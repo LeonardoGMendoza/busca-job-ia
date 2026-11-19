@@ -1,0 +1,42 @@
+{
+  "_leia": "Perfil usado para pontuar as vagas. Edite os pesos, as buscas e a localização. Peso maior = mais importante.",
+  "nome": "Leonardo Mendoza",
+  "nivel": "pleno",
+  "local": {"cidades": ["foz do iguacu", "foz"], "estado": ["parana", "pr"], "aceita_remoto": true},
+  "titulos_alvo": [".net", "dotnet", "c#", "back-end", "backend", "back end", "full stack", "fullstack", "full-stack", "desenvolvedor", "developer", "engenheiro de software", "software engineer"],
+  "skills": {
+    "c#": {"peso": 3, "padroes": ["(?<![a-z0-9])c#", "c sharp", "csharp"]},
+    ".net": {"peso": 3, "padroes": ["(?<![a-z0-9])\\.net(?![a-z])", "dotnet", "asp\\.net", "net core"]},
+    "asp.net core": {"peso": 2, "padroes": ["asp\\.?net"]},
+    "sql server": {"peso": 2, "padroes": ["sql ?server", "mssql", "t-?sql"]},
+    "microsservicos": {"peso": 2, "padroes": ["microsservic", "microservic", "micro servic"]},
+    "rabbitmq": {"peso": 2, "padroes": ["rabbit ?mq", "mensageria", "message broker", "pub/?sub"]},
+    "docker": {"peso": 2, "padroes": ["docker", "container"]},
+    "azure devops": {"peso": 2, "padroes": ["azure devops", "azure pipelines", "ci/?cd", "pipelines?"]},
+    "entity framework": {"peso": 1.5, "padroes": ["entity framework", "\\bef core\\b", "\\befcore\\b", "dapper"]},
+    "api rest": {"peso": 1.5, "padroes": ["\\brest\\b", "restful", "web ?api", "\\bapis?\\b"]},
+    "azure": {"peso": 1, "padroes": ["\\bazure\\b"]},
+    "angular": {"peso": 1, "padroes": ["angular"]},
+    "react": {"peso": 1, "padroes": ["\\breact\\b"]},
+    "typescript": {"peso": 0.5, "padroes": ["typescript"]},
+    "python": {"peso": 1, "padroes": ["python", "fastapi"]},
+    "oracle/pl-sql": {"peso": 1, "padroes": ["oracle", "pl/?sql"]},
+    "postgresql": {"peso": 0.5, "padroes": ["postgre"]},
+    "git": {"peso": 0.5, "padroes": ["\\bgit\\b", "github", "gitlab"]},
+    "solid/clean code": {"peso": 1, "padroes": ["\\bsolid\\b", "clean code", "clean architecture", "\\bddd\\b"]},
+    "testes": {"peso": 1, "padroes": ["teste unit", "unit test", "xunit", "nunit", "\\btdd\\b", "testes automatiz"]},
+    "scrum/kanban": {"peso": 0.5, "padroes": ["scrum", "kanban", "metodologias ageis"]},
+    "ia generativa": {"peso": 1, "padroes": ["\\bllm\\b", "\\brag\\b", "ia generativa", "generative ai", "openai", "embedding"]},
+    "vb6/vb.net": {"peso": 0.5, "padroes": ["vb\\.?net", "vb6", "visual basic"]}
+  },
+  "lacunas_comuns": ["kubernetes", "aws", "gcp", "kafka", "redis", "mongodb", "terraform", "graphql", "grpc", "elasticsearch", "azure functions", "service bus", "blazor", "sap", "salesforce"],
+  "stack_fora": ["java", "php", "ruby", "golang", "node", "android", "ios", "flutter", "kotlin", "swift", "sap", "salesforce", "cobol", "protheus", "totvs"],
+  "buscas": [
+    {"q": "desenvolvedor .NET pleno", "remoto": true},
+    {"q": "desenvolvedor C# back-end pleno", "remoto": true},
+    {"q": "desenvolvedor full stack .NET Angular", "remoto": true},
+    {"q": "desenvolvedor .NET Foz do Iguaçu", "remoto": false},
+    {"q": "engenheiro de software C# microsserviços", "remoto": true},
+    {"q": "desenvolvedor Python IA generativa", "remoto": true}
+  ]
+}

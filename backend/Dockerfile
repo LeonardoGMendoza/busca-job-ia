@@ -3,6 +3,7 @@ WORKDIR /srv
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 COPY app ./app
+COPY buscar_dev.py perfil_leonardo.json ./
 ENV BJ_DATA_DIR=/srv/data
 VOLUME /srv/data
 EXPOSE 8000

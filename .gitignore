@@ -8,3 +8,7 @@ data/
 __pycache__/
 .venv/
 node_modules/
+
+# Planilhas geradas pelo buscar_dev.py
+backend/saida/
+saida/
