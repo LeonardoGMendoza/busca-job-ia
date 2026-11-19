@@ -20,6 +20,12 @@ from pathlib import Path
 from app.compat import carregar_perfil, ranquear
 from app.config import carregar_env
 
+for _f in (sys.stdout, sys.stderr):      # acentos certos no Git Bash/Windows
+    try:
+        _f.reconfigure(encoding="utf-8")
+    except (AttributeError, ValueError):
+        pass
+
 carregar_env()
 from app.vagas import PAIS_CODIGO, BuscaReal, _http_json  # noqa: E402
 

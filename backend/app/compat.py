@@ -58,14 +58,14 @@ def pontuar(vaga, perfil):
     tem_dotnet = "c#" in casou or ".net" in casou
 
     # 3) Senioridade
-    if re.search(SENIOR, titulo):
+    if re.search(PLENO, titulo):                  # "Pleno/Sênior" ou "Júnior/Pleno" aceitam pleno
+        nota_nivel = PESO_NIVEL
+    elif re.search(SENIOR, titulo):
         nota_nivel = PESO_NIVEL * 0.35
         alertas.append("Sênior/liderança: vaga acima do pleno (dá para tentar, mostrando a liderança do projeto K2)")
     elif re.search(JUNIOR, titulo):
         nota_nivel = PESO_NIVEL * 0.2
         alertas.append("Júnior/estágio: abaixo do seu nível")
-    elif re.search(PLENO, titulo):
-        nota_nivel = PESO_NIVEL
     else:
         nota_nivel = PESO_NIVEL * 0.67
 
@@ -91,8 +91,10 @@ def pontuar(vaga, perfil):
     if fora and not tem_dotnet:
         nota = min(nota, 25)
         alertas.append("Stack principal diferente: " + ", ".join(fora))
-    elif not tem_dotnet and not casou:
-        nota = min(nota, 30)
+    elif not tem_dotnet:
+        # sem C# nem .NET na vaga: nunca "Alta" (ex.: Python/Go com RabbitMQ e Docker)
+        nota = min(nota, 30 if not casou else 60)
+        alertas.append("Não cita C# nem .NET: confira a stack antes de se candidatar")
 
     if re.search(INGLES, corpo):
         alertas.append("Pede inglês avançado/fluente (seu inglês é B2)")

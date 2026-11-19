@@ -30,7 +30,7 @@
     "vb6/vb.net": {"peso": 0.5, "padroes": ["vb\\.?net", "vb6", "visual basic"]}
   },
   "lacunas_comuns": ["kubernetes", "aws", "gcp", "kafka", "redis", "mongodb", "terraform", "graphql", "grpc", "elasticsearch", "azure functions", "service bus", "blazor", "sap", "salesforce"],
-  "stack_fora": ["java", "php", "ruby", "golang", "node", "android", "ios", "flutter", "kotlin", "swift", "sap", "salesforce", "cobol", "protheus", "totvs"],
+  "stack_fora": ["java", "php", "ruby", "golang", "go lang", "go", "node", "android", "ios", "flutter", "kotlin", "swift", "sap", "salesforce", "cobol", "protheus", "totvs"],
   "buscas": [
     {"q": "desenvolvedor .NET pleno", "remoto": true},
     {"q": "desenvolvedor C# back-end pleno", "remoto": true},

@@ -296,7 +296,7 @@ class BuscaReal:
             saida.append({"titulo": j.get("job_title"), "empresa": j.get("employer_name"), "local": local or ("Remote" if remoto else t["cidade"]["nome"]),
                           "link": j.get("job_apply_link"), "fonte": j.get("job_publisher") or "Google Vagas", "data": (j.get("job_posted_at_datetime_utc") or "")[:10],
                           "salario": salario, "tipo": j.get("job_employment_type") or "", "remoto": bool(j.get("job_is_remote")),
-                          "resumo": (j.get("job_description") or "")[:220]})
+                          "resumo": (j.get("job_description") or "")[:220], "descricao": (j.get("job_description") or "")[:1500]})
         return saida
 
     def _jooble(self, t):
@@ -308,7 +308,7 @@ class BuscaReal:
                           corpo={"keywords": t["q"], "location": t["cidade"]["nome"], "page": 1, "ResultOnPage": 20})
         return [{"titulo": re.sub(r"<[^>]+>", "", j.get("title") or ""), "empresa": j.get("company"), "local": j.get("location") or t["cidade"]["nome"],
                  "link": j.get("link"), "fonte": j.get("source") or "Jooble", "data": (j.get("updated") or "")[:10], "salario": j.get("salary") or "",
-                 "tipo": j.get("type") or "", "remoto": False, "resumo": re.sub(r"<[^>]+>", "", j.get("snippet") or "")[:220]}
+                 "tipo": j.get("type") or "", "remoto": False, "resumo": re.sub(r"<[^>]+>", "", j.get("snippet") or "")[:220], "descricao": re.sub(r"<[^>]+>", "", j.get("snippet") or "")[:1500]}
                 for j in (bruto.get("jobs") or [])[:20]]
 
     def buscar(self, cidade_id, area_id="", livre="", periodo_id=""):

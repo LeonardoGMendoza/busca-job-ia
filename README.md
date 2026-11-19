@@ -29,6 +29,14 @@ Com o servidor ligado e uma chave configurada, o app mostra as vagas de verdade 
 Cada busca fica 6 horas em cache, para gastar pouca cota. Rota: `GET /api/buscar?cidade=&area=&livre=&periodo=`.
 Não usamos robôs no Indeed/LinkedIn/Computrabajo (os termos deles proíbem): só APIs que liberam os dados.
 
+## Nota de compatibilidade no site (para qualquer área)
+
+Em **Vagas**, o cartão **"Meu perfil"** pede as habilidades (ex.: *UTI, curativos, COREN* para enfermagem; *C#, .NET, SQL Server* para TI), o nível e se aceita remoto. As vagas reais passam a aparecer **ordenadas pela compatibilidade** (0 a 100%), com o que combina e alertas (nível acima/abaixo, local fora da cidade). O perfil fica só no navegador (`localStorage`), nada é enviado ao servidor.
+
+- A nota soma: título da vaga com a profissão buscada (30), habilidades que aparecem na vaga (45), nível (15) e local/remoto (10). Código em `frontend/src/compat.js`; testes: `cd frontend && npm test`.
+- É uma estimativa pelo título e pelo resumo; a pessoa deve ler a vaga completa antes de se candidatar.
+- Depois de mexer no site: `cd frontend && npm run build`, depois `git add . && git commit && git push` (a pasta `web/` é a publicada). O servidor também precisa de `git pull` e novo `docker build` (a API agora devolve mais texto da vaga).
+
 ## Busca de vagas .NET com nota de compatibilidade (uso pessoal)
 
 Script que procura vagas de desenvolvedor .NET (remotas e em Foz do Iguaçu), compara com o perfil do Leonardo e gera uma planilha ordenada da melhor para a pior. **Não se candidata sozinho**: você abre o link e envia o currículo.

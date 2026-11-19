@@ -2,6 +2,13 @@ export const LOCALE = { pt: 'pt-BR', es: 'es-PY', en: 'en-US' };
 
 export const T = {
   pt: {
+    perfilTitulo: 'Meu perfil: nota de compatibilidade', perfilSub: 'Conte o que você sabe fazer e as vagas que mais combinam aparecem primeiro. Fica só neste aparelho.',
+    perfilHab: 'Suas habilidades e experiências (separe por vírgula)', perfilHabPh: 'Ex.: UTI, curativos, COREN, sinais vitais',
+    perfilNivel: 'Seu nível', perfilNiveis: { '': 'Não informar', junior: 'Júnior / iniciante', pleno: 'Pleno / com experiência', senior: 'Sênior / especialista' },
+    perfilRemoto: 'Aceito vaga remota', perfilLimpar: 'Limpar perfil', perfilAtivo: (n) => `${n} habilidades salvas`,
+    compatRotulo: 'compatível', compatCasou: 'Combina com', compatFaixa: { alta: 'Alta', media: 'Média', baixa: 'Baixa' },
+    compatAlertas: { acima: 'Nível acima do seu', abaixo: 'Nível abaixo do seu', longe: 'Local fora da cidade buscada' },
+    compatOrdem: 'Ordenadas pela compatibilidade com o seu perfil.', compatAviso: 'A nota é uma estimativa feita pelo título e pelo resumo da vaga. Leia a vaga completa antes de se candidatar.',
     morHeroTitulo: 'Moradia para estudantes perto da sua faculdade', morHeroSub: 'Pensionatos, residências e imobiliárias de verdade, mais os anúncios dos principais portais de aluguel de cada país.',
     morTipo: 'Tipo de moradia', morVazioTitulo: 'Escolha a cidade', morVazioTexto: 'Selecione a cidade e o tipo de moradia, ou diga à assistente: "quero alugar um quarto em Ciudad del Este".',
     morLocais: (c) => `Pensionatos, residências e imobiliárias em ${c}`, procurando2: 'Procurando locais no mapa…',
@@ -45,6 +52,13 @@ export const T = {
     publicada: 'Publicada em', qualquer: 'Qualquer jornada'
   },
   es: {
+    perfilTitulo: 'Mi perfil: nota de compatibilidad', perfilSub: 'Cuenta qué sabes hacer y las vacantes que más combinan aparecen primero. Se guarda solo en este dispositivo.',
+    perfilHab: 'Tus habilidades y experiencias (separa con coma)', perfilHabPh: 'Ej.: UTI, curaciones, signos vitales, atención al cliente',
+    perfilNivel: 'Tu nivel', perfilNiveis: { '': 'No informar', junior: 'Junior / principiante', pleno: 'Semi senior / con experiencia', senior: 'Senior / especialista' },
+    perfilRemoto: 'Acepto trabajo remoto', perfilLimpar: 'Borrar perfil', perfilAtivo: (n) => `${n} habilidades guardadas`,
+    compatRotulo: 'compatible', compatCasou: 'Coincide con', compatFaixa: { alta: 'Alta', media: 'Media', baixa: 'Baja' },
+    compatAlertas: { acima: 'Nivel por encima del tuyo', abaixo: 'Nivel por debajo del tuyo', longe: 'Lugar fuera de la ciudad buscada' },
+    compatOrdem: 'Ordenadas por compatibilidad con tu perfil.', compatAviso: 'La nota es una estimación hecha con el título y el resumen de la vacante. Lee la vacante completa antes de postularte.',
     morHeroTitulo: 'Alojamiento para estudiantes cerca de tu facultad', morHeroSub: 'Pensiones, residencias e inmobiliarias reales, más los anuncios de los principales portales de alquiler de cada país.',
     morTipo: 'Tipo de alojamiento', morVazioTitulo: 'Elige la ciudad', morVazioTexto: 'Selecciona la ciudad y el tipo, o dile a la asistente: "quiero alquilar una habitación en Ciudad del Este".',
     morLocais: (c) => `Pensiones, residencias e inmobiliarias en ${c}`, procurando2: 'Buscando lugares en el mapa…',
@@ -88,6 +102,13 @@ export const T = {
     publicada: 'Publicada el', qualquer: 'Cualquier jornada'
   },
   en: {
+    perfilTitulo: 'My profile: match score', perfilSub: 'Tell us what you can do and the best-matching jobs show first. Saved only on this device.',
+    perfilHab: 'Your skills and experience (separate with commas)', perfilHabPh: 'E.g.: ICU, wound care, vital signs, customer service',
+    perfilNivel: 'Your level', perfilNiveis: { '': 'Prefer not to say', junior: 'Junior / entry level', pleno: 'Mid-level / experienced', senior: 'Senior / specialist' },
+    perfilRemoto: 'I accept remote jobs', perfilLimpar: 'Clear profile', perfilAtivo: (n) => `${n} skills saved`,
+    compatRotulo: 'match', compatCasou: 'Matches', compatFaixa: { alta: 'High', media: 'Medium', baixa: 'Low' },
+    compatAlertas: { acima: 'Level above yours', abaixo: 'Level below yours', longe: 'Outside the searched city' },
+    compatOrdem: 'Sorted by how well they match your profile.', compatAviso: 'The score is an estimate based on the job title and summary. Read the full posting before applying.',
     morHeroTitulo: 'Student housing near your university', morHeroSub: "Real student residences, boarding houses and real-estate agencies, plus each country's main rental sites.",
     morTipo: 'Housing type', morVazioTitulo: 'Choose a city', morVazioTexto: 'Pick a city and a housing type, or tell the assistant: "I want to rent a room in Ciudad del Este".',
     morLocais: (c) => `Residences, boarding houses and agencies in ${c}`, procurando2: 'Looking for places on the map…',

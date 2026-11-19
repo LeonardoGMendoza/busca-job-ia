@@ -40,6 +40,19 @@ class TestCompat(unittest.TestCase):
         self.assertGreater(foz["nota"], longe["nota"])
         self.assertTrue(any("Presencial" in a for a in longe["alertas"]))
 
+    def test_pleno_junto_com_senior_ou_junior_conta_como_pleno(self):
+        d = "C#, .NET, SQL Server"
+        base = pontuar(vaga("Desenvolvedor .NET Pleno", d), PERFIL)["nota"]
+        for t in ("Desenvolvedor .NET Pleno/Sênior", "Desenvolvedor .NET Júnior/Pleno"):
+            r = pontuar(vaga(t, d), PERFIL)
+            self.assertEqual(r["nota"], base)
+            self.assertEqual(r["alertas"], [])
+
+    def test_sem_csharp_nem_dotnet_nunca_e_alta(self):
+        r = pontuar(vaga("Desenvolvedor Python/Go Lang Pleno", "Python, RabbitMQ, Docker, microsserviços, Azure DevOps, REST, Git"), PERFIL)
+        self.assertLessEqual(r["nota"], 60)
+        self.assertNotEqual(r["faixa"], "Alta")
+
     def test_ingles_avancado_alerta(self):
         r = pontuar(vaga("Desenvolvedor .NET", "C#. Inglês fluente obrigatório."), PERFIL)
         self.assertTrue(any("inglês" in a.lower() for a in r["alertas"]))

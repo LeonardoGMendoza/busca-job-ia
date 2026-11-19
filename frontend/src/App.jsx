@@ -5,6 +5,8 @@ import { Busca, Pin, Maleta, Relogio, Externo, Info, Predio, Globo } from './ico
 import Assistente from './Assistente.jsx';
 import Moradia from './Moradia.jsx';
 import Premium from './Premium.jsx';
+import Perfil from './Perfil.jsx';
+import { listaHabilidades, ranquear } from './compat.js';
 
 const VERSAO = 3;
 const API_PADRAO = 'https://buscajob.sandlj.com.br';   // servidor na VPS com a IA da Oracle
@@ -42,11 +44,13 @@ export default function App() {
   const [morCidade, setMorCidade] = useState(() => ler('bj.morCidade', ''));
   const [morTipo, setMorTipo] = useState(() => ler('bj.morTipo', 'pensionato'));
   const [reais, setReais] = useState({ estado: 'parado', vagas: [], fontes: [] });
+  const [perfil, setPerfil] = useState(() => ({ habilidades: '', nivel: '', remoto: true, ...ler('bj.perfil', {}) }));
   const t = T[idioma];
   const txt = (o) => (o && (o[idioma] || o.pt)) || '';
 
   useEffect(() => { document.documentElement.lang = idioma; gravar('bj.idioma', idioma); }, [idioma]);
   useEffect(() => { gravar('bj.busca2', busca); }, [busca]);
+  useEffect(() => { gravar('bj.perfil', perfil); }, [perfil]);
   useEffect(() => { gravar('bj.morCidade', morCidade); gravar('bj.morTipo', morTipo); }, [morCidade, morTipo]);
   useEffect(() => { history.replaceState(null, '', pagina === 'moradia' ? '#moradia' : location.pathname + location.search); window.scrollTo(0, 0); }, [pagina]);
 
@@ -100,6 +104,14 @@ export default function App() {
     }, 350);
     return () => { vivo = false; clearTimeout(espera); };
   }, [reaisLigadas, busca]);
+
+  // nota de compatibilidade (só quando a pessoa contou suas habilidades): vagas reais ordenadas da que mais combina para a que menos
+  const habilidades = useMemo(() => listaHabilidades(perfil.habilidades), [perfil.habilidades]);
+  const reaisOrdenadas = useMemo(() => {
+    if (!habilidades.length) return reais.vagas;
+    const p = { cargo: area ? txt(area.nome) : busca.livre, habilidades, nivel: perfil.nivel, aceitaRemoto: perfil.remoto, cidadeNome: cidade?.nome || '' };
+    return ranquear(reais.vagas, p);
+  }, [reais.vagas, habilidades, perfil.nivel, perfil.remoto, area, cidade, busca.livre, idioma]);   // eslint-disable-line react-hooks/exhaustive-deps
 
   const registrar = (tipo, id) => {
     if (!online) return;
@@ -218,6 +230,7 @@ export default function App() {
 
       <main className="container layout">
         <div className="coluna-principal" id="resultados" hidden={pagina !== 'vagas'}>
+          {links.length > 0 && reaisLigadas && <Perfil t={t} perfil={perfil} setPerfil={setPerfil} />}
           {reais.estado !== 'parado' && links.length > 0 && (
             <section className="card">
               <div className="card-cabeca">
@@ -225,12 +238,20 @@ export default function App() {
                 <p className="sub">{reais.estado === 'carregando' ? t.procurando : reais.vagas.length ? t.encontradasSub(reais.vagas.length, reais.fontes.join(' + ')) : t.nenhumaReal}</p>
               </div>
               {reais.estado === 'carregando' && <ul className="vagas">{[0, 1, 2].map(i => <li key={i} className="vaga esqueleto"><div><span /><span /></div></li>)}</ul>}
+              {reais.estado === 'pronto' && reais.vagas.length > 0 && habilidades.length > 0 && <p className="sub compat-ordem">{t.compatOrdem} {t.compatAviso}</p>}
               {reais.estado === 'pronto' && reais.vagas.length > 0 && (
                 <ul className="vagas">
-                  {reais.vagas.map(v => (
+                  {reaisOrdenadas.map(v => (
                     <li key={v.link} className="vaga vaga-real">
                       <div>
                         <strong>{v.titulo}</strong>
+                        {v.compat && (
+                          <span className="compat">
+                            <span className={`compat-nota faixa-${v.compat.faixa}`} title={t.compatFaixa[v.compat.faixa]}>{v.compat.nota}% {t.compatRotulo}</span>
+                            {v.compat.casou.length > 0 && <span className="compat-casou">{t.compatCasou}: {v.compat.casou.join(', ')}</span>}
+                            {v.compat.alertas.map(a => <span key={a} className="compat-alerta">{t.compatAlertas[a]}</span>)}
+                          </span>
+                        )}
                         <span className="vaga-meta">{[v.empresa, v.local, v.fonte, v.data && new Date(v.data + 'T12:00').toLocaleDateString(LOCALE[idioma])].filter(Boolean).join(' · ')}</span>
                         {(v.salario || v.tipo) && <span className="vaga-tags">{v.salario && <span className="tag">{v.salario}</span>}{v.tipo && <span className="tag">{v.tipo}</span>}</span>}
                         {v.resumo && <p className="vaga-resumo">{v.resumo}…</p>}

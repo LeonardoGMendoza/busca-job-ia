@@ -180,3 +180,22 @@ a { color: var(--azul-600); }
   .vaga { flex-direction: column; align-items: stretch; }
 }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+
+/* perfil e nota de compatibilidade */
+.perfil summary { cursor: pointer; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; list-style: none; }
+.perfil summary::-webkit-details-marker { display: none; }
+.perfil summary::after { content: "▾"; margin-left: auto; color: var(--cinza-500); }
+.perfil[open] summary::after { content: "▴"; }
+.perfil .sub { margin: 8px 0 12px; }
+.perfil-campo { display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 180px; }
+.perfil-campo textarea, .perfil-campo select { border: 1px solid var(--cinza-300); border-radius: 8px; padding: 8px 10px; background: #fff; resize: vertical; }
+.perfil-linha { display: flex; align-items: flex-end; gap: 14px; flex-wrap: wrap; margin-top: 10px; }
+.perfil-check { display: flex; align-items: center; gap: 6px; font-size: 14px; padding-bottom: 8px; }
+.compat-ordem { margin: 0 0 8px; }
+.compat { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; margin: 4px 0 2px; font-size: 13px; }
+.compat-nota { font-weight: 700; border-radius: 6px; padding: 2px 8px; }
+.faixa-alta { background: #d1fae5; color: #065f46; }
+.faixa-media { background: var(--ambar-50); color: var(--ambar-800); border: 1px solid var(--ambar-300); }
+.faixa-baixa { background: var(--cinza-100); color: var(--cinza-700); }
+.compat-casou { color: var(--cinza-700); }
+.compat-alerta { color: var(--ambar-800); font-weight: 500; }
